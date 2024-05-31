@@ -1,0 +1,11 @@
+.player-stats-section {
+    height: 448px;
+    width: 448px;
+    background: rgb(184, 185, 163);
+    border: 2px solid red;
+    margin: auto;
+    position: relative;
+    bottom: 622px;
+    display: none;
+    flex-direction: column;
+}

@@ -1,0 +1,41 @@
+.inventory {
+    height: 448px;
+    width: 448px;
+    background: rgb(116, 103, 100);
+    border: 2px solid rgb(68, 0, 255);
+    margin: auto;
+    position: relative;
+    bottom: 622px;
+    display: none;
+    flex-direction: column;
+}
+
+.inventory-title{
+    padding: 10px;
+}
+.equipped-items-box{
+    height: 100px;
+    width: 428px;
+    margin: 0 auto;
+    background: rgb(66, 66, 66);
+    margin-bottom: 10px;
+}
+.inventory-message-box {
+    height: 100px;
+    width: 428px;
+    margin: 0 auto;
+    background: rgb(231, 255, 93);
+    margin-bottom: 10px;
+}
+.backpack-box {
+    height: 100px;
+    width: 428px;
+    margin: 0 auto;
+    background: rgb(90, 61, 42);
+    margin-bottom: 10px;
+}
+.close-inventory-button {
+    width: 100px;
+    cursor: pointer;
+    margin: 0 auto;
+}
