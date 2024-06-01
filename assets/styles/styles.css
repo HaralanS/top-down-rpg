@@ -65,6 +65,12 @@ h1{
 .center {
     background-color: red;
 }
+.seller-01{
+    background-image: url("../img/seller-01.png");
+}
+.battle-tile{
+    background-image: url("../img/trainning-tile.png");
+}
 .char {
     position: relative;
     bottom: 256px;

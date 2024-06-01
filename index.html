@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/styles/styles.css">
     <link rel="stylesheet" href="assets/styles/player-stats-styles.css">
     <link rel="stylesheet" href="assets/styles/inventory.css">
+    <link rel="stylesheet" href="assets/styles/battle-screen-styles.css">
     
     <title>Top Down Game</title>
 </head>
@@ -29,14 +30,92 @@
             <div class="control-button right-button"></div>
         </div>
         <div class="player-stats-section">
-            <button class="close-player-stats-button">Voltar</button>
+            <div class="player-stats-title">Player Stats</div>
+            <div class="stats-box">
+                <div class="stats-box-child">
+                    <p class="level-stats"></p>
+                    <p class="class-stats"></p>
+                    <p class="experience-stats"></p>
+                    <p class="life-stats"></p>
+                    <p class="mana-stats"></p>
+                </div>
+                <div class="stats-box-child">
+                    <p class="strength-stats"></p>
+                    <p class="precision-stats"></p>
+                    <p class="critical-stats"></p>
+                    <p class="armor-stats"></p>
+                    <p class="attack-stats"></p>
+                </div>
+            </div>
+            <div class="skills-title">Skills</div>
+            <div class="skills-box">
+
+            </div>
+            <div class="skills-to-learn">Skills</div>
+            <div class="skills-to-learn-box">
+
+            </div>
+            <div class="stats-message">Select a skill to know about it or to learn it.</div>
+            <div class="stats-buttons-box">
+                <button disabled class="skill-set-button">Learn Skill</button>
+                <button class="close-player-stats-button">Voltar</button>
+            </div>
+            
         </div>
         <div class="inventory">
-            <h2 class="inventory-title">Inventory</h2>
-            <div class="equipped-items-box"></div>
+            <div class="inventory-title">Inventory</div>
+            <div class="equipped-items-box">
+                <div class="weapon-box equipped-box"></div>
+                <div class="armor-box equipped-box"></div>
+                <div class="trinket-box equipped-box"></div>
+                <div class="ring-box equipped-box"></div>
+            </div>
             <div class="inventory-message-box"></div>
             <div class="backpack-box"></div>
-            <button class="close-inventory-button" >Voltar</button>
+            <div class="inventory-buttons-box">
+                <button class="inventory-action-button">Selecione</button>
+                <button class="close-inventory-button" >Voltar</button>
+                
+            </div>
+            
+        </div>
+        <div class="battle-screen">
+            <div class="battle-title">
+
+            </div>
+            <div class="battle-scene">
+                <div class="battle-messages"></div>
+                <div class="fighters-box">
+                    <div class="hero-box">
+                        <div class="life-mana-box">
+                            <div class="hero-life-bar-bg">
+                                <div class="hero-life-bar"></div>
+                            </div>
+                            <div class="hero-mana-bar-bg">
+                                <div class="hero-mana-bar"></div>
+                            </div>
+                            <p class="hero-life-bar-text">100</p>
+                            <p class="hero-mana-bar-text">50</p>
+                        </div>
+                        <div class="hero-img-box"></div>
+                    </div>
+                    <div class="monster-box">
+                        <div class="life-mana-box">
+                            <div class="hero-life-bar-bg">
+                                <div class="monster-life-bar"></div>
+                            </div>
+                            
+                            <p class="monster-life-bar-text">100</p>
+                        </div>
+                        <div class="monster-img-box"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="battle-controls">
+                <div class="battle-actions-box">
+                    <div class="attack-button battle-actions-buttons"></div>
+                </div>
+            </div>
         </div>
     </div>
     

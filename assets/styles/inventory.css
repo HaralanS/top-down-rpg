@@ -14,28 +14,72 @@
     padding: 10px;
 }
 .equipped-items-box{
-    height: 100px;
+    height: 80px;
     width: 428px;
     margin: 0 auto;
-    background: rgb(66, 66, 66);
+    /* background: rgb(66, 66, 66); */
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-around;
 }
 .inventory-message-box {
     height: 100px;
     width: 428px;
     margin: 0 auto;
+    padding: 10px;
     background: rgb(231, 255, 93);
     margin-bottom: 10px;
 }
 .backpack-box {
-    height: 100px;
+    height: 160px;
     width: 428px;
     margin: 0 auto;
     background: rgb(90, 61, 42);
     margin-bottom: 10px;
+    display: flex;
+    padding: 8px;
+    gap: 8px;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+}
+.inventory-buttons-box{
+    display: flex;
+    justify-content: space-around;
+}
+.inventory-action-button{
+    width: 150px;
+    padding: 2px;
+    cursor: pointer;
 }
 .close-inventory-button {
     width: 100px;
     cursor: pointer;
-    margin: 0 auto;
+    /* margin: 0 auto; */
+    padding: 2px;
+}
+.equipped-box{
+    height: 70px;
+    width: 70px;
+    border-radius: 4px;
+    background-position: center;
+    background-size: 64px;
+    background-repeat: no-repeat;
+    border: 1px solid white;
+    margin: auto;
+    cursor: pointer;
+}
+
+.backpack-slot{
+    height: 70px;
+    width: 70px;
+    border-radius: 4px;
+    background-position: center;
+    background-size: 64px;
+    background-repeat: no-repeat;
+    border: 1px solid white;
+    color: white;
+    padding: 4px;
+    font-weight: bold;
+    /* margin: auto; */
+    cursor: pointer;
 }

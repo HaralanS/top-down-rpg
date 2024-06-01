@@ -1,0 +1,112 @@
+.battle-screen {
+    height: 448px;
+    width: 448px;
+    background: rgb(184, 185, 163);
+    border: 1px solid rgb(0, 0, 0);
+    margin: auto;
+    position: relative;
+    bottom: 622px;
+    display: none;
+    flex-direction: column;
+}
+
+.battle-title{
+    height: 40px;
+    background: yellow;
+}
+.battle-scene{
+    height: 300px;
+}
+.battle-messages{
+    height: 50px;
+    text-align: center;
+    padding: 8px;
+}
+.fighters-box{
+    height: 250px;
+    display: flex;
+}
+.hero-box{
+    height: 250px;
+    width: 224px;
+}
+.monster-box{
+    height: 250px;
+    width: 224px;
+}
+.life-mana-box{
+    padding-top: 20px;
+    height: 60px;
+}
+.hero-life-bar-bg {
+    
+    margin: 0 auto;
+    margin-bottom: 4px;
+    width: 150px;
+    height: 16px;
+    background: red;
+    border: 1px solid black;
+}
+.hero-mana-bar-bg {
+    border: 1px solid black;
+    margin: 0 auto;
+    width: 150px;
+    height: 16px;
+    background: rgb(214, 214, 214);
+}
+.hero-life-bar-text{
+    position: relative;
+    bottom: 36px;
+    font-size: 14px;
+    text-align: center;
+}
+.hero-mana-bar-text{
+    position: relative;
+    bottom: 31px;
+    font-size: 14px;
+    text-align: center;
+}
+.monster-life-bar-text{
+    position: relative;
+    bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.hero-life-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(0, 167, 0);
+}
+.monster-life-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(0, 167, 0);
+}
+.hero-mana-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(161, 0, 201);
+}
+.hero-img-box{
+    height: 128px;
+    width: 128px;
+    /* background: orange; */
+    position: relative;
+    left: 48px;
+    top: 40px;
+}
+.monster-img-box{
+    height: 128px;
+    width: 128px;
+    /* background: orange; */
+    position: relative;
+    left: 48px;
+    top: 40px;
+}
+
+
+.battle-controls{
+    height: 108px;
+    background: rgb(64, 64, 66);
+}

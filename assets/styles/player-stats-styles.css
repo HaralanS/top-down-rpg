@@ -9,3 +9,77 @@
     display: none;
     flex-direction: column;
 }
+.player-stats-title {
+    height: 30px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+.stats-box{
+    /* background: gray; */
+    padding: 8px 16px;
+    display: flex;
+}
+.stats-buttons-box{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 10px;
+}
+.close-player-stats-button{
+    width: 150px;
+    padding: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.skill-set-button{
+    width: 150px;
+    padding: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.stats-box-child{
+    width: 200px;
+}
+.skills-box {
+    height: 70px;
+    /* background: gray; */
+    padding: 0 16px;
+    display: flex;
+    gap: 8px;
+    /* overflow-x: scroll; */
+}
+.skill-slot{
+    height: 64px;
+    width: 64px;
+    cursor: pointer;
+}
+.skill-tl-slot{
+    height: 64px;
+    width: 64px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+.skill-tl-slot:hover{
+    opacity: 1;
+}
+.skills-to-learn-box{
+    height: 70px;
+    /* background: gray; */
+    padding: 0 16px;
+    display: flex;
+    gap: 8px;
+}
+.stats-message {
+    height: 70px;
+    /* background: gray; */
+    padding: 0 16px;
+    text-align: center;
+}
+
+.skills-to-learn{
+    padding: 0 16px;
+    font-weight: bold;
+}
+.skills-title{
+    padding: 0 16px;
+    font-weight: bold;
+}
