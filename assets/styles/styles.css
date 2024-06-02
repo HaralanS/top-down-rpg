@@ -100,7 +100,7 @@ h1{
     width: 100px;
     /* border: 2px solid red; */
     left: 184px;
-    bottom: 120px;
+    bottom: 240px;
     opacity: 0.5;
     text-align: center;
     border-radius: 5px;
@@ -117,8 +117,8 @@ h1{
     width: 102px;
     /* border: 1px solid red; */
     position: relative;
-    left: 340px;
-    bottom: 180px;
+    left: 330px;
+    bottom: 300px;
     cursor: pointer;
 }
 
@@ -157,6 +157,77 @@ h1{
 
 .control-button:hover{
     opacity: 1;
+}
+
+.map-life-bar-bg {
+    margin-bottom: 4px;
+    width: 120px;
+    height: 16px;
+    background: red;
+    border: 1px solid black;
+    position: relative;
+    bottom: 130px;
+    left: 16px;
+}
+.map-mana-bar-bg {
+    margin-bottom: 4px;
+    width: 120px;
+    height: 16px;
+    background: rgb(63, 63, 63);
+    border: 1px solid black;
+    position: relative;
+    bottom: 130px;
+    left: 16px;
+}
+.map-xp-bar-bg {
+    margin-bottom: 4px;
+    width: 120px;
+    height: 16px;
+    background: rgb(63, 63, 63);
+    border: 1px solid black;
+    position: relative;
+    bottom: 130px;
+    left: 16px;
+}
+.map-life-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(0, 167, 0);
+}
+.map-mana-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(180, 0, 180);
+}
+.map-xp-bar{
+    height: 100%;
+    width: 100%;
+    background: rgb(209, 178, 0);
+}
+.map-life-bar-text{
+    width: 120px;
+    position: relative;
+    bottom: 190px;
+    left: 16px;
+    text-align: center;
+    color: white;
+    
+}
+.map-mana-bar-text{
+    width: 120px;
+    position: relative;
+    bottom: 189px;
+    left: 16px;
+    text-align: center;
+    color: white;
+}
+.map-xp-bar-text{
+    width: 120px;
+    position: relative;
+    bottom: 188px;
+    left: 16px;
+    text-align: center;
+    color: white;
 }
 
 

@@ -44,9 +44,12 @@ class Warrior {
         this.totalArmor = this.equippedWeapon.armor + this.equippedArmor.armor + this.equippedTrinket.armor + this.equippedRing.armor;
         this.totalAttack = this.equippedWeapon.attack + this.equippedTrinket.attack + this.equippedRing.attack;
     }
-    attack(random) {
-        this.setEquippmentStats()        
-        const damage = this.totalAttack * 2 + this.totalStrength + Math.ceil(this.totalStrength);
+    attack() {
+        const random = Math.random() * 100;
+        this.setEquippmentStats()   
+        
+        const damage = this.totalAttack + this.totalStrength + Math.ceil(Math.random() * this.totalAttack);
+        console.log(damage)
         if(random < this.totalCritical) {
             return damage * 2;
         } else if (random < this.totalPrecision) {
@@ -60,7 +63,7 @@ class Warrior {
         this.life = Math.max(0, (this.life - damageTaken));
     }
     levelUp(xp) {
-        if (this.experience >= experienceList[9]) {
+        if (this.experience >= this.experienceList[9]) {
             
             if(this.experience - xp < 2090) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
@@ -71,7 +74,7 @@ class Warrior {
             this.strength = 23;
             this.maxLife = 235;
             this.maxMana = 95;
-        } else if (this.experience >= experienceList[8]) {
+        } else if (this.experience >= this.experienceList[8]) {
             
             if(this.experience - xp < 1660) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
@@ -82,7 +85,7 @@ class Warrior {
             this.strength = 21;
             this.maxLife = 220;
             this.maxMana = 90;
-        } else if (this.experience >= experienceList[7]) {
+        } else if (this.experience >= this.experienceList[7]) {
             
             if(this.experience - xp < 1300) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
@@ -93,7 +96,7 @@ class Warrior {
             this.strength = 19;
             this.maxLife = 205;
             this.maxMana = 85;
-        } else if (this.experience >= experienceList[6]) {
+        } else if (this.experience >= this.experienceList[6]) {
             if(this.experience - xp < 1000) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);
@@ -103,7 +106,7 @@ class Warrior {
             this.strength = 17;
             this.maxLife = 190;
             this.maxMana = 80;
-        } else if (this.experience >= experienceList[5]) {
+        } else if (this.experience >= this.experienceList[5]) {
             if(this.experience - xp < 750) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);
@@ -113,7 +116,7 @@ class Warrior {
             this.strength = 15;
             this.maxLife = 175;
             this.maxMana = 75;
-        } else if (this.experience >= experienceList[4]) {
+        } else if (this.experience >= this.experienceList[4]) {
             if(this.experience - xp < 540) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);
@@ -123,7 +126,7 @@ class Warrior {
             this.strength = 13;
             this.maxLife = 160;
             this.maxMana = 70;
-        } else if (this.experience >= experienceList[3]) {
+        } else if (this.experience >= this.experienceList[3]) {
             if(this.experience - xp < 365) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);
@@ -133,7 +136,7 @@ class Warrior {
             this.strength = 11;
             this.maxLife = 145;
             this.maxMana = 65;
-        } else if (this.experience >= experienceList[2]) {
+        } else if (this.experience >= this.experienceList[2]) {
             if(this.experience - xp < 220) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);
@@ -143,7 +146,7 @@ class Warrior {
             this.strength = 9;
             this.maxLife = 130;
             this.maxMana = 60;
-        } else if (this.experience >= experienceList[1]) {
+        } else if (this.experience >= this.experienceList[1]) {
             if(this.experience - xp < 100) {
                 this.life = Math.min(this.life + 15, this.totalMaxLife);
                 this.mana = Math.min(this.mana + 5, this.totalMaxMana);

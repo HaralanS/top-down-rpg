@@ -1,0 +1,15 @@
+.victory-screen {
+    height: 448px;
+    width: 448px;
+    background: rgb(184, 185, 163);
+    border: 2px solid red;
+    margin: auto;
+    position: relative;
+    bottom: 738px;
+    display: none;
+    flex-direction: column;
+}
+
+.victory-title {
+    color: yellow;
+}

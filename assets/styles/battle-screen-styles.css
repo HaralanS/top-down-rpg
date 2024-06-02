@@ -5,7 +5,7 @@
     border: 1px solid rgb(0, 0, 0);
     margin: auto;
     position: relative;
-    bottom: 622px;
+    bottom: 738px;
     display: none;
     flex-direction: column;
 }
@@ -94,7 +94,7 @@
     /* background: orange; */
     position: relative;
     left: 48px;
-    top: 40px;
+    top: 20px;
 }
 .monster-img-box{
     height: 128px;
@@ -102,11 +102,44 @@
     /* background: orange; */
     position: relative;
     left: 48px;
-    top: 40px;
+    top: 20px;
 }
 
 
 .battle-controls{
     height: 108px;
     background: rgb(64, 64, 66);
+}
+.battle-actions-box{
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+}
+.skills-action-box{
+    display: flex;
+    gap: 8px;
+}
+.battle-actions-buttons{
+    height: 64px;
+    width: 64px;
+    border: 1px solid white;
+    border-radius: 4px;
+    cursor: pointer;
+    background-size: 64px;
+}
+.life-potion-button {
+    background-image: url("../img/life-potion-01.png");
+    font-weight: bold;
+    font-size: 20px;
+    text-align: left;
+    padding: 4px;
+    padding-bottom: 54px;
+}
+.mana-potion-button {
+    background-image: url("../img/mana-potion-01.png");
+    font-weight: bold;
+    font-size: 20px;
+    text-align: left;
+    padding: 4px;
+    padding-bottom: 54px;
 }

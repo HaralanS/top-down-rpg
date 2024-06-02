@@ -30,8 +30,31 @@ let onMap = true;
 let selectedItem = 0;
 let selectedSkill = "none";
 let monster;
+let effect;
+let effectTurns;
 const experienceList = hero.experienceList;
 
+const bts = "../assets/img/battleScene-01.png";
+
+const createSkillButtons =() => {
+    batteActionsBox.innerText = ""
+    for (let i = 0; i < hero.skills.length; i++) {
+        const skillButton = document.createElement("button")
+        skillButton.classList.add("battle-actions-buttons")
+        skillButton.setAttribute("style", `background-image: url(${hero.skills[i].img});`)
+        skillButton.addEventListener("click", () => {
+            battleTurn(i)
+        })
+        if(hero.mana >= hero.skills[i].manaCost) {
+            skillButton.removeAttribute("disabled")
+        } else {
+            skillButton.setAttribute("disabled", "true")
+        }
+        batteActionsBox.appendChild(skillButton)
+
+        
+    }
+}
 
 const screen = document.querySelector(".screen");
 const mapa01Div = document.querySelector(".mapa01");
@@ -75,7 +98,23 @@ const monsterImgBox = document.querySelector(".monster-img-box")
 const heroLifeBar = document.querySelector(".hero-life-bar")
 const heroManaBar = document.querySelector(".hero-mana-bar")
 const monsterLifeBar = document.querySelector(".monster-life-bar")
+const battleBgImg = document.querySelector(".battle-scene")
+const batteActionsBox = document.querySelector(".skills-action-box")
+const lifePotionBtlImg = document.querySelector(".life-potion-button")
+const manaPotionBtlImg = document.querySelector(".mana-potion-button")
+const attackButton = document.querySelector(".attack-button")
 
+lifePotionBtlImg.addEventListener("click", () => {
+    battleTurn("drinkHp")
+})
+manaPotionBtlImg.addEventListener("click", () => {
+    battleTurn("drinkMp")
+})
+attackButton.addEventListener("click", () => {
+    battleTurn("weaponAttack")
+})
+
+const victoryScreen = document.querySelector(".victory-screen")
 
 hero.setEquippmentStats()
 
@@ -201,6 +240,15 @@ const checkWalkableTile = (direction) => {
     if(direction == "up") {
         return (mapa01[charPositionY - 1][charPositionX] == 1 || mapa01[charPositionY - 1][charPositionX] == 5)  && !moveCooldown
     }
+    if(direction == "down") {
+        return (mapa01[charPositionY + 1][charPositionX] == 1 || mapa01[charPositionY + 1][charPositionX] == 5)  && !moveCooldown
+    }
+    if(direction == "left") {
+        return (mapa01[charPositionY][charPositionX - 1] == 1 || mapa01[charPositionY][charPositionX -1] == 5)  && !moveCooldown
+    }
+    if(direction == "right") {
+        return (mapa01[charPositionY][charPositionX + 1] == 1 || mapa01[charPositionY][charPositionX +1] == 5)  && !moveCooldown
+    }
     
 }
 const goUp = () => {
@@ -225,7 +273,7 @@ const goUp = () => {
     checkAction()
 }
 const goDown = () => {
-    if(mapa01[charPositionY + 1][charPositionX] == 1 && !moveCooldown) {
+    if(checkWalkableTile("down")) {
         moveCooldown = true;
         charPositionY += 1;
         mapPositionY += 64;
@@ -249,7 +297,7 @@ const goDown = () => {
 }
 const goLeft = () => {
     
-    if(mapa01[charPositionY][charPositionX - 1] == 1 && !moveCooldown) {  
+    if(checkWalkableTile("left")) {  
         moveCooldown = true;      
         charPositionX -= 1;
         mapPositionX -= 64;
@@ -272,7 +320,7 @@ const goLeft = () => {
 }
 const goRight = () => {
     
-    if(mapa01[charPositionY][charPositionX + 1] == 1 && !moveCooldown) {  
+    if(checkWalkableTile("right")) {  
         moveCooldown = true;      
         charPositionX += 1;
         mapPositionX += 64;
@@ -336,6 +384,7 @@ const openPlayerStats = () => {
 const setInventoryStats = () => {
     checkQuant()
     backpackBox.innerText = "";
+    const inventoryTitle = document.querySelector(".inventory-title").innerHTML = `<span style="font-weight:bold; font-size: 20px;">Inventory</span> - Life: ${hero.life}/${hero.totalMaxLife} - Mana: ${hero.mana}/${hero.totalMaxMana} - <span style="color:gold">Gold: ${hero.gold}</span>`
     weaponBox.setAttribute("style", `background-image: url(${hero.equippedWeapon.img})`)
     weaponBox.addEventListener("click", () => {
         setItemMessage(hero.equippedWeapon)
@@ -520,11 +569,14 @@ const setSkill = () => {
 const openBattle = (selectedMonster) => {
     onMap=false;  
     monster = selectedMonster;
+    battleMessage.innerHTML = `You found a ${monster.name}`
     battleScreen.setAttribute("style", "display: flex;")
+    
+    createSkillButtons()
     setBattle()
 }
 const setBattle = () => {
-    battleMessage.innerHTML = `You found a ${monster.name}`
+    // console.log(hero.skills)
     heroLifeBarText.innerHTML = `${hero.life}/${hero.totalMaxLife}`
     heroManaBarText.innerHTML = `${hero.mana}/${hero.totalMaxMana}`
     monsterLifeBarText.innerHTML = `${monster.life}/${monster.maxLife}`
@@ -532,11 +584,147 @@ const setBattle = () => {
     monsterImgBox.setAttribute("style", `background-image: url(${monster.img});`)
     heroLifeBar.setAttribute("style", `width: ${100 / hero.totalMaxLife * hero.life}%;`)
     heroManaBar.setAttribute("style", `width: ${100 / hero.totalMaxMana * hero.mana}%;`)
-    monsterLifeBar.setAttribute("style", `width: ${100 / monster.mana * monster.mana}%;`)
+    monsterLifeBar.setAttribute("style", `width: ${100 / monster.maxLife * monster.life}%;`)
+    battleBgImg.setAttribute("style", `background-image: url(${bts});`)
+    
+    
+    lifePotionBtlImg.innerHTML = checkQuantity(new SmallHealthPotion())
+    manaPotionBtlImg.innerHTML = checkQuantity(new SmallManaPotion)
+    if(searchItem(new SmallHealthPotion())) {
+        lifePotionBtlImg.removeAttribute("disabled")
+    } else {
+        lifePotionBtlImg.setAttribute("disabled", "true")
+    }
+    if(searchItem(new SmallManaPotion())) {
+        manaPotionBtlImg.removeAttribute("disabled")
+    } else {
+        manaPotionBtlImg.setAttribute("disabled", "true")
+    }
+    attackButton.setAttribute("style", `background-image: url(${hero.equippedWeapon.img});`)
+   
+    
+    
+}
+
+const checkQuantity = (itemToSearch) => {
+    for (let i = 0; i < hero.inventory.length; i++) {
+        if(itemToSearch.name == hero.inventory[i].name) {
+            return hero.inventory[i].quant;
+        }
+        
+    }
+    return 0;
+}
+const searchItem = (itemToSearch) => {
+    for (let i = 0; i < hero.inventory.length; i++) {
+        if(itemToSearch.name == hero.inventory[i].name) {
+            return true;
+        }
+        
+    }
+    return false;
+}
+const searchItemId = (itemToSearch) => {
+    for (let i = 0; i < hero.inventory.length; i++) {
+        if(itemToSearch.name == hero.inventory[i].name) {
+            return i;
+        }
+        
+    }
+    return false;
+}
+const openVictoryScreen = (monsterDefeated) => {
+    hero.experience += monsterDefeated.experience;
+    hero.levelUp(monsterDefeated.experience)
+    let goldDropped = monster.dropGold()
+    hero.gold += goldDropped;
+    const victoryTitle = document.querySelector(".victory-title")
+    victoryTitle.innerHTML = monsterDefeated.name;
+    victoryScreen.setAttribute("style", "display: flex;")
+    battleScreen.setAttribute("style", "display: none;")
+    const victoryCloseButton = document.querySelector(".close-victory-screen")
+    victoryCloseButton.addEventListener("click", () => {
+        victoryScreen.setAttribute("style", "display: none;")
+        onMap=true;
+    })
+}
+
+const battleTurn = (actionType) => {
+    let damage;
+    if (actionType == "weaponAttack") {
+        damage = hero.attack();
+        monster.takeDamage(damage)
+        battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
+    } else if (actionType == 0) {
+        if(hero.skills[0].type == "effect") {
+            effect = hero.skills[0].effect(hero);
+            damage = effect.damage;
+            monster.takeDamage(damage)
+            effectTurns = effect.turns;
+        }
+        if(hero.skills[0].type == "hit") {
+            damage = hero.skills[0].attack(hero);
+            monster.takeDamage(damage)
+            battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
+        }
+        
+    } else if (actionType == 1) {
+        if(hero.skills[1].type == "effect") {
+            effect = hero.skills[1].effect(hero);
+            damage = effect.damage;
+            monster.takeDamage(damage)
+            effectTurns = effect.turns;
+        }
+        if(hero.skills[1].type == "hit") {
+            damage = hero.skills[1].attack(hero);
+            monster.takeDamage(damage)
+            battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
+        }
+        
+    } else if (actionType == "drinkHp") {
+        hero.inventory[searchItemId(new SmallHealthPotion())].drink(hero)
+        
+    } else if (actionType == "drinkMp") {
+        hero.inventory[searchItemId(new SmallManaPotion())].drink(hero)
+    }
+    setBattle()
+    if(monster.life > 0){
+        if(effectTurns > 0) {
+            setTimeout(() => {
+                if(effect.type == "bleeding") {
+                    monster.takeDamage(effect.damage)
+                    effectTurns--;
+                    battleMessage.innerHTML = `${monster.name} lost ${effect.damage} hitpoints due to ${effect.type}`
+                    setBattle()
+                }
+            }, 500)
+        }
+    }
+
+    
+    if(monster.life > 0){
+        setTimeout(() => {
+            let monsterDamage = monster.attack()
+            hero.takeDamage(monsterDamage)
+            battleMessage.innerHTML = `You lost ${monsterDamage} hitpoints to a ${monster.name} attack`
+            setBattle()
+        }, 500)
+        
+    } else {
+        openVictoryScreen(monster)
+        return
+    }
+
+    
+    setBattle()
+
 }
 
 lootQuant(new RedApple)
 lootQuant(new RedApple)
+lootQuant(new SmallHealthPotion)
+lootQuant(new SmallHealthPotion)
+lootQuant(new SmallHealthPotion)
 checkAction()
 
 

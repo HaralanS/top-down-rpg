@@ -3,12 +3,14 @@ export class Strike {
     type = "hit";
     manaCost = 10;
     level = 1;
-    skillCost = 1;
+    skillCost = 5;
     info = "Guarantees a hit and deals double normal damage";
     img = "../assets/img/strike.png";
 
 
-    attack(hero, random){
+    attack(hero){
+        const random = Math.random() * 100;
+        hero.mana -= this.manaCost;
         hero.setEquippmentStats()        
         const damage = hero.totalAttack * 2 + hero.totalStrength + Math.ceil(hero.totalStrength);
         if(random < hero.totalCritical) {
@@ -29,6 +31,7 @@ export class InflictWound {
     img = "../assets/img/inflict-wound.png";
     
     effect(hero){
+        hero.mana -= this.manaCost;
         return {
         type: "bleeding",
         turns: 3,

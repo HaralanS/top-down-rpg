@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/styles/player-stats-styles.css">
     <link rel="stylesheet" href="assets/styles/inventory.css">
     <link rel="stylesheet" href="assets/styles/battle-screen-styles.css">
+    <link rel="stylesheet" href="assets/styles/victory-screen.css">
     
     <title>Top Down Game</title>
 </head>
@@ -20,6 +21,22 @@
             </div>
         </div>
         <div class="char"></div>
+        <div class="on-screen-stats">
+            
+                <div class="map-life-bar-bg">
+                    <div class="map-life-bar"></div>
+                </div>
+                <div class="map-mana-bar-bg">
+                    <div class="map-mana-bar"></div>
+                </div>
+                <div class="map-xp-bar-bg">
+                    <div class="map-xp-bar"></div>
+                </div>
+                <p class="map-life-bar-text">100</p>
+                <p class="map-mana-bar-text">50</p>
+                <p class="map-xp-bar-text">200</p>
+            
+        </div>
         <div class="action-button"></div>
         <div class="controls">
             <div class="control-button backpack-button"></div>
@@ -113,9 +130,22 @@
             </div>
             <div class="battle-controls">
                 <div class="battle-actions-box">
-                    <div class="attack-button battle-actions-buttons"></div>
+                    <button class="attack-button battle-actions-buttons"></button>
+                    <button class="life-potion-button battle-actions-buttons"></button>
+                    <button class="mana-potion-button battle-actions-buttons"></button>
+                    <div class="skills-action-box"></div>
                 </div>
             </div>
+        </div>
+        <div class="victory-screen">
+            <div class="victory-messages-box">
+                <h2 class="victory-title">Victory!</h2>
+                <p class="level-up-message"></p>
+                <p class="xp-message"></p>
+                <p class="gold-message"></p>
+            </div>
+            <button class="close-victory-screen">Close</button>
+            
         </div>
     </div>
     

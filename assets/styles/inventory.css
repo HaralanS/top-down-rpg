@@ -2,10 +2,10 @@
     height: 448px;
     width: 448px;
     background: rgb(116, 103, 100);
-    border: 2px solid rgb(68, 0, 255);
+    border: 1px solid black;
     margin: auto;
     position: relative;
-    bottom: 622px;
+    bottom: 738px;
     display: none;
     flex-direction: column;
 }
@@ -27,8 +27,9 @@
     width: 428px;
     margin: 0 auto;
     padding: 10px;
-    background: rgb(231, 255, 93);
+    background: rgb(63, 63, 63);
     margin-bottom: 10px;
+    color: white;
 }
 .backpack-box {
     height: 160px;
