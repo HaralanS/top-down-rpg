@@ -95,6 +95,15 @@
     position: relative;
     left: 48px;
     top: 20px;
+    animation: idle infinite 1600ms step-end;
+}
+
+@keyframes idle {
+    0%   {background-position-x: 0;}
+    25%  {background-position-x: -128px;}
+    50%  {background-position-x: -256px;}
+    75% {background-position-x: -128px;}
+    100%   {background-position-x: 0;}
 }
 .monster-img-box{
     height: 128px;

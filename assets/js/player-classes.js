@@ -14,10 +14,10 @@ class Warrior {
     mana = 50;
     maxMana = 50;
     strength = 5;
-    gold = 20;
-    img = "../assets/img/warrior-game-01.png";
+    gold = 2000;
+    img = "../assets/img/warrior-game-fp-01-Sheet-export.png";
     critical = 5;
-    precision = 50;
+    precision = 70;
     totalStrength = 5;
     totalCritical = 5;
     totalPrecision = 50;
@@ -30,10 +30,10 @@ class Warrior {
     equippedTrinket = new SmallProtectionAmulet();
     equippedRing = new SmallPowerRing();
     inventory = [];
-    skillPoints = 1;
+    skillPoints = 2;
     skills = [];
     skillsToChoose = [new Strike(), new InflictWound()];
-    experienceList = [0, 100, 220, 365, 540, 750, 1000, 1300, 1660, 2090];
+    experienceList = [0, 100, 250, 375, 565, 845, 1265, 1900, 2850, 4270];
     
     setEquippmentStats() {
         this.totalStrength = this.strength + this.equippedWeapon.strength + this.equippedArmor.strength + this.equippedRing.strength + this.equippedTrinket.strength;
@@ -48,8 +48,7 @@ class Warrior {
         const random = Math.random() * 100;
         this.setEquippmentStats()   
         
-        const damage = this.totalAttack + this.totalStrength + Math.ceil(Math.random() * this.totalAttack);
-        console.log(damage)
+        const damage = this.totalAttack + Math.ceil(Math.random() * this.totalStrength); 
         if(random < this.totalCritical) {
             return damage * 2;
         } else if (random < this.totalPrecision) {
@@ -153,8 +152,7 @@ class Warrior {
                 this.skillPoints ++;
             }
             this.level = 2;
-            this.strength = 7;this.life = Math.min(this.life + 15, this.totalMaxLife);
-            this.mana = Math.min(this.mana + 5, this.totalMaxMana);
+            this.strength = 7;
             this.maxLife = 115;
             this.maxMana = 55;
         }

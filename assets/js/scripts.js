@@ -7,6 +7,7 @@ import { SmallHealthPotion, SmallManaPotion } from "./item-classes/potions.js";
 import { RedApple } from "./item-classes/food.js";
 import { Strike } from "./skills.js";
 import { Goblin } from "./monsters.js";
+import { ChainArmor } from "./item-classes/armors.js";
 
 
 const hero = new Warrior();
@@ -17,8 +18,28 @@ hero.inventory.push(new BattleAxe())
 hero.inventory.push(new SmallHealthPotion())
 hero.inventory.push(new SmallManaPotion())
 
+const storeItemsList = [
+    {
+        item: new SmallHealthPotion(),
+        price: 10
+    },
+    {
+        item: new SmallManaPotion(),
+        price: 10
+    },
+    {
+        item: new SteelSword(),
+        price: 80
+    },
+    {
+        item: new ChainArmor(),
+        price: 70
+    },
+]
 
-const mapa01 = map01;
+
+const mapa01 = map01.map;
+const respawnArea = map01.respawnMap
 
 let charPositionX = 7;
 let charPositionY = 7;
@@ -32,6 +53,7 @@ let selectedSkill = "none";
 let monster;
 let effect;
 let effectTurns;
+let steps = 0;
 const experienceList = hero.experienceList;
 
 const bts = "../assets/img/battleScene-01.png";
@@ -43,7 +65,12 @@ const createSkillButtons =() => {
         skillButton.classList.add("battle-actions-buttons")
         skillButton.setAttribute("style", `background-image: url(${hero.skills[i].img});`)
         skillButton.addEventListener("click", () => {
-            battleTurn(i)
+            if(hero.mana >= hero.skills[i].manaCost) {
+                battleTurn(i)
+            }
+            
+            
+            
         })
         if(hero.mana >= hero.skills[i].manaCost) {
             skillButton.removeAttribute("disabled")
@@ -66,6 +93,13 @@ const downButton = document.querySelector(".down-button")
 const leftButton = document.querySelector(".left-button")
 const rightButton = document.querySelector(".right-button")
 const inventoryButton = document.querySelector(".backpack-button")
+const mapLifeBar = document.querySelector(".map-life-bar")
+const mapManaBar = document.querySelector(".map-mana-bar")
+const mapXpBar = document.querySelector(".map-xp-bar")
+const mapLifeText = document.querySelector(".map-life-bar-text")
+const mapManaText = document.querySelector(".map-mana-bar-text")
+const mapXpText = document.querySelector(".map-xp-bar-text")
+
 const closeInventoryButton = document.querySelector(".close-inventory-button")
 const statsButton = document.querySelector(".stats-button")
 const closePlayerStatsButton = document.querySelector(".close-player-stats-button")
@@ -73,6 +107,7 @@ const skillsBox = document.querySelector(".skills-box")
 const skillsToLearnBox = document.querySelector(".skills-to-learn-box")
 const statsMessage = document.querySelector(".stats-message")
 const skillSetButton = document.querySelector(".skill-set-button")
+
 
 const weaponBox = document.querySelector(".weapon-box")
 const armorBox = document.querySelector(".armor-box")
@@ -103,15 +138,108 @@ const batteActionsBox = document.querySelector(".skills-action-box")
 const lifePotionBtlImg = document.querySelector(".life-potion-button")
 const manaPotionBtlImg = document.querySelector(".mana-potion-button")
 const attackButton = document.querySelector(".attack-button")
+const battleActionContainer = document.querySelector(".battle-actions-box")
+
+const lootMessageBox = document.querySelector(".loot-message-box")
+
+const storeScreen = document.querySelector(".store-screen")
+const storeCloseButton = document.querySelector(".store-close-button")
+const storeItemsBox = document.querySelector(".store-items-box")
+const storeMessage = document.querySelector(".store-message")
+const storeTitle = document.querySelector(".store-title")
+
+const setStoreStats = () => {
+    storeTitle.innerHTML = `Store - Gold: ${hero.gold}`
+}
+const setStoreItems = (itemsList) => {
+    setStoreStats()
+    storeItemsBox.innerText = ""
+    for (let i = 0; i < itemsList.length; i++) {
+        let possibleInput;
+        const storeItemContainer = document.createElement("div")
+        storeItemContainer.classList.add("store-item-container")
+        
+        const storeItemImg = document.createElement("img")
+        storeItemImg.classList.add("store-item-img")
+        storeItemImg.setAttribute("src", itemsList[i].item.img)
+        storeItemContainer.appendChild(storeItemImg)
+        
+        const storeItemName = document.createElement("p")
+        storeItemName.innerHTML = itemsList[i].item.name + " - " + itemsList[i].price + " gold"
+        storeItemName.addEventListener("click", () => {
+            setStoreItemMessage(itemsList[i].item)
+        })
+        storeItemContainer.appendChild(storeItemName)
+
+        if(itemsList[i].item.stackable) {
+            const storeItemInput = document.createElement("input")
+            storeItemInput.setAttribute("type", "number")
+            storeItemInput.classList.add("store-item-input")
+            possibleInput = storeItemInput
+            storeItemContainer.appendChild(storeItemInput)
+        }
+
+        const storeItemButton = document.createElement("button")
+        storeItemButton.classList.add("buy-buttons")
+        storeItemButton.innerHTML = "Buy"
+        storeItemButton.addEventListener("click", () => {
+            buyItem(itemsList[i], possibleInput)
+            possibleInput.value = 0
+            setStoreStats()
+        })
+        storeItemContainer.appendChild(storeItemButton)
+
+        storeItemsBox.appendChild(storeItemContainer)
+    }
+}
+
+
+const setStoreItemMessage = (item) => {
+    storeMessage.innerHTML = item.name + " - Selling price: " + item.sellingPrice;
+    if(item.attack > 0) {
+        storeMessage.innerHTML += " - Attack: +" + item.attack;
+    }
+    if(item.armor > 0) {
+        storeMessage.innerHTML += " - Armor: +" + item.armor;
+    }
+    if(item.precision > 0) {
+        storeMessage.innerHTML += " - Precision: +" + item.precision + "%";
+    }
+    if(item.critical > 0) {
+        storeMessage.innerHTML += " - Critical: +" + item.critical + "%";
+    }
+    if(item.maxLife > 0) {
+        storeMessage.innerHTML += " - Life: +" + item.maxLife;
+    }
+    if(item.maxMana > 0) {
+        storeMessage.innerHTML += " - Mana: +" + item.maxMana;
+    }
+    if(item.strength > 0) {
+        storeMessage.innerHTML += " - Strength: +" + item.strength;
+    }
+    storeMessage.innerHTML += " - " + item.info;
+}
+
+
+storeCloseButton.addEventListener("click", () => {
+    closePopUp()
+    storeMessage.innerHTML = "Select an item to see the description"
+})
 
 lifePotionBtlImg.addEventListener("click", () => {
+    
     battleTurn("drinkHp")
+    
 })
 manaPotionBtlImg.addEventListener("click", () => {
+    
     battleTurn("drinkMp")
+    
 })
 attackButton.addEventListener("click", () => {
+    
     battleTurn("weaponAttack")
+    
 })
 
 const victoryScreen = document.querySelector(".victory-screen")
@@ -205,10 +333,14 @@ const setMap = () => {
             if(mapa01[i][j] == 5) {
                 tile.classList.add("battle-tile");
             }
+            if(mapa01[i][j] == 6) {
+                tile.classList.add("tall-grass");
+            }
             mapa01Div.appendChild(tile)
         }
         
     }
+    
 }
 setMap()
 
@@ -238,16 +370,16 @@ document.addEventListener("keydown", function(e){
 })
 const checkWalkableTile = (direction) => {
     if(direction == "up") {
-        return (mapa01[charPositionY - 1][charPositionX] == 1 || mapa01[charPositionY - 1][charPositionX] == 5)  && !moveCooldown
+        return (mapa01[charPositionY - 1][charPositionX] == 1 || mapa01[charPositionY - 1][charPositionX] == 5 || mapa01[charPositionY - 1][charPositionX] == 6)  && !moveCooldown
     }
     if(direction == "down") {
-        return (mapa01[charPositionY + 1][charPositionX] == 1 || mapa01[charPositionY + 1][charPositionX] == 5)  && !moveCooldown
+        return (mapa01[charPositionY + 1][charPositionX] == 1 || mapa01[charPositionY + 1][charPositionX] == 5 || mapa01[charPositionY + 1][charPositionX] == 6)  && !moveCooldown
     }
     if(direction == "left") {
-        return (mapa01[charPositionY][charPositionX - 1] == 1 || mapa01[charPositionY][charPositionX -1] == 5)  && !moveCooldown
+        return (mapa01[charPositionY][charPositionX - 1] == 1 || mapa01[charPositionY][charPositionX -1] == 5 || mapa01[charPositionY][charPositionX -1] == 6)  && !moveCooldown
     }
     if(direction == "right") {
-        return (mapa01[charPositionY][charPositionX + 1] == 1 || mapa01[charPositionY][charPositionX +1] == 5)  && !moveCooldown
+        return (mapa01[charPositionY][charPositionX + 1] == 1 || mapa01[charPositionY][charPositionX +1] == 5 || mapa01[charPositionY][charPositionX +1] == 6)  && !moveCooldown
     }
     
 }
@@ -351,8 +483,17 @@ const takeAction = () => {
         // actionButton.innerHTML = actionButton.innerHTML == "Open" ? "Close" : "Open";
         openDoor()
     }
+    if (action == 3) {
+        openStore()
+    }
 }
 const checkAction = () => {
+    steps++;
+    let respawnMob = map01.checkRespawn(charPositionX, charPositionY)
+    if(respawnMob.name.length > 1 && steps > 3){
+        steps = 0;
+        openBattle(respawnMob)
+    }
     
     if(charPositionX == 7 && charPositionY == 7) {
         action = 1;
@@ -493,8 +634,10 @@ const equipItem = () => {
 }
 const closePopUp = () => {
     onMap=true;
+    setMapStats()
     playerStatsSection.setAttribute("style", "display: none;")
     inventorySection.setAttribute("style", "display: none;")
+    storeScreen.setAttribute("style", "display: none;")
 }
 const setPlayerStats = () => {
     skillsBox.innerText = "";
@@ -548,7 +691,7 @@ const lootQuant = (item) => {
     for (let i = 0; i < hero.inventory.length; i++) {
         if(hero.inventory[i].name == item.name){
             hasItem = true;
-            hero.inventory[i].quant += item.quant;
+            hero.inventory[i].quant ++;
         }
         
     }
@@ -590,14 +733,11 @@ const setBattle = () => {
     
     lifePotionBtlImg.innerHTML = checkQuantity(new SmallHealthPotion())
     manaPotionBtlImg.innerHTML = checkQuantity(new SmallManaPotion)
-    if(searchItem(new SmallHealthPotion())) {
-        lifePotionBtlImg.removeAttribute("disabled")
-    } else {
+    if(!searchItem(new SmallHealthPotion()) || hero.inventory[searchItemId(new SmallHealthPotion())].quant < 1) {
+
         lifePotionBtlImg.setAttribute("disabled", "true")
     }
-    if(searchItem(new SmallManaPotion())) {
-        manaPotionBtlImg.removeAttribute("disabled")
-    } else {
+    if(!searchItem(new SmallManaPotion()) || hero.inventory[searchItemId(new SmallManaPotion())].quant < 1) {
         manaPotionBtlImg.setAttribute("disabled", "true")
     }
     attackButton.setAttribute("style", `background-image: url(${hero.equippedWeapon.img});`)
@@ -634,12 +774,39 @@ const searchItemId = (itemToSearch) => {
     return false;
 }
 const openVictoryScreen = (monsterDefeated) => {
+    lootMessageBox.innerText = "";
+    const levelUpMessage = document.querySelector(".level-up-message")
+    levelUpMessage.innerHTML = ""
     hero.experience += monsterDefeated.experience;
-    hero.levelUp(monsterDefeated.experience)
+    if (hero.experience >= hero.experienceList[hero.level]) {
+        hero.levelUp(monsterDefeated.experience)
+        
+        levelUpMessage.innerHTML = `Congrats! You reached level ${hero.level}`
+    }
+    let loot = monsterDefeated.dropItems()
     let goldDropped = monster.dropGold()
     hero.gold += goldDropped;
-    const victoryTitle = document.querySelector(".victory-title")
-    victoryTitle.innerHTML = monsterDefeated.name;
+    
+    const xpMessage = document.querySelector(".xp-message")
+    xpMessage.innerHTML = `You gained ${monsterDefeated.experience}xp`;
+    const goldMessage = document.querySelector(".gold-message")
+    goldMessage.innerHTML = `You found ${goldDropped} gold`
+
+    for (let i = 0; i < loot.length; i++) {
+        const lootMessage = document.createElement("p")
+        lootMessage.classList.add("loot-message")
+        if(loot[i].stackable){
+            lootQuant(loot[i])
+            lootMessage.innerHTML = `You found ${loot[i].name}`
+            lootMessageBox.appendChild(lootMessage)
+        } else {
+            hero.inventory.push(loot[i])
+            lootMessage.innerHTML = `You found ${loot[i].name}`
+            lootMessageBox.appendChild(lootMessage)
+        }
+        
+    }
+    
     victoryScreen.setAttribute("style", "display: flex;")
     battleScreen.setAttribute("style", "display: none;")
     const victoryCloseButton = document.querySelector(".close-victory-screen")
@@ -647,10 +814,12 @@ const openVictoryScreen = (monsterDefeated) => {
         victoryScreen.setAttribute("style", "display: none;")
         onMap=true;
     })
+    setMapStats()
 }
 
 const battleTurn = (actionType) => {
     let damage;
+    
     if (actionType == "weaponAttack") {
         damage = hero.attack();
         monster.takeDamage(damage)
@@ -687,6 +856,15 @@ const battleTurn = (actionType) => {
     } else if (actionType == "drinkMp") {
         hero.inventory[searchItemId(new SmallManaPotion())].drink(hero)
     }
+    const actionList = battleActionContainer.querySelectorAll("button")
+    
+    for (let i = 0; i < actionList.length; i++) {
+        actionList[i].setAttribute("disabled", "true")
+    }
+
+        
+    
+    
     setBattle()
     if(monster.life > 0){
         if(effectTurns > 0) {
@@ -707,18 +885,85 @@ const battleTurn = (actionType) => {
             let monsterDamage = monster.attack()
             hero.takeDamage(monsterDamage)
             battleMessage.innerHTML = `You lost ${monsterDamage} hitpoints to a ${monster.name} attack`
+            for (let i = 0; i < actionList.length; i++) {
+                
+                    actionList[i].removeAttribute("disabled")
+                
+                
+            }
             setBattle()
         }, 500)
         
     } else {
+        for (let i = 0; i < actionList.length; i++) {
+            if(i == 1) {
+                if(searchItem(new SmallHealthPotion()) && hero.inventory[searchItemId(new SmallHealthPotion())].quant > 0) {
+                    
+                    lifePotionBtlImg.removeAttribute("disabled")
+                }
+            } else if(i == 2) {
+                if(searchItem(new SmallManaPotion()) && hero.inventory[searchItemId(new SmallManaPotion())].quant > 0) {
+                    
+                    manaPotionBtlImg.removeAttribute("disabled")
+                }
+            } else {
+                actionList[i].removeAttribute("disabled")
+            }
+            
+        }
         openVictoryScreen(monster)
         return
     }
+    
 
     
     setBattle()
 
 }
+const setMapStats = () => {
+    hero.setEquippmentStats()
+    mapLifeBar.setAttribute("style", `width: ${100 / hero.totalMaxLife * hero.life}%;`)
+    mapManaBar.setAttribute("style", `width: ${100 / hero.totalMaxMana * hero.mana}%;`)
+    mapXpBar.setAttribute("style", `width: ${100 / (experienceList[hero.level] - experienceList[hero.level - 1]) * (hero.experience - experienceList[hero.level - 1]) }%;`)
+    mapLifeText.innerHTML = `${hero.life}/${hero.totalMaxLife}`
+    mapManaText.innerHTML = `${hero.mana}/${hero.totalMaxMana}`
+    mapXpText.innerHTML = `${hero.experience}/${experienceList[hero.level]}`
+}
+
+const openStore = () => {
+    onMap=false;  
+    storeScreen.setAttribute("style", "display: flex;")
+    setStoreItems(storeItemsList)
+}
+const buyItem = (option, quantInput) => {
+    
+    if(option.item.stackable) {
+        const quantityToBuy = parseInt(quantInput.value)
+        if(quantityToBuy > 0) {
+            if(hero.gold >= (option.price * quantityToBuy)) {
+                hero.gold -= (option.price * quantityToBuy);
+                storeMessage.innerHTML = `You bought ${quantityToBuy} ${option.item.name} for ${option.price * quantityToBuy} gold`
+                for (let i = 0; i < quantityToBuy; i++) {
+                    lootQuant(option.item)
+                    
+                }
+            } else {
+                storeMessage.innerHTML = "You don't have enough gold"
+            }
+        } else {
+            storeMessage.innerHTML = "Quantity need to be higher than 0"
+        }
+        
+    } else {
+        if(hero.gold >= option.price) {
+            storeMessage.innerHTML = `You bought ${option.item.name} for ${option.price} gold`
+        } else {
+            storeMessage.innerHTML = "You don't have enough gold"
+        }
+    }
+}
+
+setMapStats()
 
 lootQuant(new RedApple)
 lootQuant(new RedApple)

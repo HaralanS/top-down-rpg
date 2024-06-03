@@ -8,8 +8,26 @@
     bottom: 738px;
     display: none;
     flex-direction: column;
+    
 }
 
 .victory-title {
     color: yellow;
+    padding-top: 10px;
+    font-size: 30px;
+    height: 50px;
+}
+.victory-messages-box{
+    padding: 16px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+}
+.close-victory-screen {
+    padding: 4px;
+    width: 150px;
+    margin: 0 auto;
+    cursor: pointer;
 }

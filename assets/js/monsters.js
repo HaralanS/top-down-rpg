@@ -5,7 +5,7 @@ export class Goblin {
     name = "Goblin";
     life = 50;
     maxLife = 50;
-    experience = 20;
+    experience = 50;
     img = "../assets/img/goblin-01.png";
     // hitImg = "../assets/img/goblin-hit-01.png";
     // attackImg = "../assets/img/goblin-attack-01.png";
@@ -15,11 +15,11 @@ export class Goblin {
         return Math.ceil(3 + Math.random() * 12);
     }
     attack() {
-        const random = Math.random() * 10;
-        if (random < 8) {
-            return 5 + Math.ceil(Math.random() * 10);
-        } else if (random < 9) {
-            return (5 + Math.ceil(Math.random() * 10)) * 2;
+        const random = Math.random() * 100;
+        if (random < 80) {
+            return 5 + Math.ceil(Math.random() * 7);
+        } else if (random < 90) {
+            return (5 + Math.ceil(Math.random() * 7)) * 2;
         } else {
             return 0;
         }
@@ -27,17 +27,16 @@ export class Goblin {
     takeDamage(damage) {
         this.life = Math.max(0, (this.life - damage));
     }
-    random(){
-        Math.random() * 100
-    }
-    dropItem() {
+    
+    dropItems() {
         const loot = [];
-        if(random() > 90) {
+        if(Math.random() * 100 > 90) {
            loot.push(new WoodenSword())
         }
-        if(random() > 60) {
+        if(Math.random() * 100 > 20) {
+            
             loot.push(new RedApple())
          }
-         return loot;
+        return loot;
     }
 }

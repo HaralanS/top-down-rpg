@@ -3,7 +3,7 @@ export class Strike {
     type = "hit";
     manaCost = 10;
     level = 1;
-    skillCost = 5;
+    skillCost = 2;
     info = "Guarantees a hit and deals double normal damage";
     img = "../assets/img/strike.png";
 
@@ -12,7 +12,7 @@ export class Strike {
         const random = Math.random() * 100;
         hero.mana -= this.manaCost;
         hero.setEquippmentStats()        
-        const damage = hero.totalAttack * 2 + hero.totalStrength + Math.ceil(hero.totalStrength);
+        const damage = hero.totalAttack + Math.ceil(Math.random() * hero.totalStrength);
         if(random < hero.totalCritical) {
             return damage * 4;
         } else {
