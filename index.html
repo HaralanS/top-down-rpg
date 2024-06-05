@@ -11,10 +11,13 @@
     <link rel="stylesheet" href="assets/styles/victory-screen.css">
     <link rel="stylesheet" href="assets/styles/store-screen-styles.css">
     <link rel="stylesheet" href="assets/styles/selling-store-screen-styles.css">
+    <link rel="stylesheet" href="assets/styles/defeated-screen-styles.css">
     
     <title>Top Down Game</title>
 </head>
 <body>
+    <audio id="sound-effect" src="">
+    </audio>
     <div class="game-div">
         <div class="screen">
             <div class="mapa01">
@@ -173,6 +176,13 @@
             <div class="selling-store-buttons-box">
                 <!-- <button class="selling-store-action-button store-buttons">Sell Items</button> -->
                 <button class="selling-store-close-button store-buttons">Close</button>
+            </div>
+        </div>
+        <div class="defeated-screen">
+            <div class="defeated-box">
+                <h2 class="defeated-title">You're dead</h2>
+                <p class="defeated-text"></p>
+                <button class="start-over-button">Start Over</button>
             </div>
         </div>
     </div>

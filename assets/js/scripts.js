@@ -91,6 +91,8 @@ const screen = document.querySelector(".screen");
 
 const charDiv = document.querySelector(".char");
 
+const soundEffect = document.getElementById("sound-effect")
+
 const actionButton = document.querySelector(".action-button")
 const upButton = document.querySelector(".up-button")
 const downButton = document.querySelector(".down-button")
@@ -158,6 +160,8 @@ const sellingStoreItemsBox = document.querySelector(".selling-store-items-box")
 const sellingStoreMessage = document.querySelector(".selling-store-message")
 const sellingStoreTitle = document.querySelector(".selling-store-title")
 
+const defeatedScreen = document.querySelector(".defeated-screen")
+
 storeSellingButton.addEventListener("click", () => {
     setSellingStoreStats()
     openSellingStore()
@@ -187,6 +191,7 @@ const setStoreItems = (itemsList) => {
         const storeItemName = document.createElement("p")
         storeItemName.innerHTML = itemsList[i].item.name + " - " + itemsList[i].price + " gold"
         storeItemName.addEventListener("click", () => {
+            makeSoundEffect("../assets/audio/metal-clang.mp3")
             setStoreItemMessage(itemsList[i].item)
         })
         storeItemContainer.appendChild(storeItemName)
@@ -230,6 +235,7 @@ const setSellingStoreItems = () => {
         const storeItemName = document.createElement("p")
         storeItemName.innerHTML = hero.inventory[i].name + " - " + hero.inventory[i].sellingPrice + " gold"
         storeItemName.addEventListener("click", () => {
+            makeSoundEffect("../assets/audio/metal-clang.mp3")
             setSellingStoreItemMessage(hero.inventory[i])
         })
         storeItemContainer.appendChild(storeItemName)
@@ -341,11 +347,14 @@ hero.setEquippmentStats()
 
 inventoryActionButton.addEventListener("click", () => {
     if(hero.inventory[selectedItem].action == "equip"){
+        makeSoundEffect("../assets/audio/item-equip.mp3")
         equipItem()
     } else if(hero.inventory[selectedItem].action == "drink"){
+        makeSoundEffect("../assets/audio/sfx-magic-01.mp3")
         hero.inventory[selectedItem].drink(hero)
         setInventoryStats()
     } else if(hero.inventory[selectedItem].action == "eat"){
+        makeSoundEffect("../assets/audio/sfx-magic-01.mp3")
         hero.inventory[selectedItem].eat(hero)
         setInventoryStats()
     }
@@ -443,6 +452,7 @@ const goUp = () => {
         charDiv.setAttribute("style", "background-position: -64px;")
         upButton.setAttribute("style", "opacity: 1;")
         setTimeout(()=>{
+            
             charDiv.setAttribute("style", "background-position: -128px;")
             setTimeout(()=>{
                 charDiv.setAttribute("style", "background-position: 0px;")
@@ -566,6 +576,7 @@ const checkAction = () => {
     }
 }
 const openPlayerStats = () => {
+    makeSoundEffect("../assets/audio/metal-clang.mp3")
     onMap=false;
     setPlayerStats()
     playerStatsSection.setAttribute("style", "display: flex;")
@@ -600,6 +611,7 @@ const setInventoryStats = () => {
         }
         backpackSlot.addEventListener("click", () => {
             selectedItem = i;
+            makeSoundEffect("../assets/audio/metal-clang.mp3")
             setItemMessage(hero.inventory[i])
             if(hero.inventory[i].action == "equip") {
                 inventoryActionButton.innerHTML = "Equip item"
@@ -625,6 +637,7 @@ const checkQuant = () => {
     }
 }
 const openInventory = () => {
+    makeSoundEffect("../assets/audio/item-equip.mp3")
     onMap=false;
     setInventoryStats()
     
@@ -681,6 +694,7 @@ const equipItem = () => {
     setInventoryStats()
 }
 const closePopUp = () => {
+    makeSoundEffect("../assets/audio/metal-clang.mp3")
     onMap=true;
     setMapStats()
     playerStatsSection.setAttribute("style", "display: none;")
@@ -718,6 +732,7 @@ const setPlayerStats = () => {
         skillSlot.classList.add("skill-tl-slot")
         skillSlot.setAttribute("style", `background-image: url(${hero.skillsToChoose[i].img})`)
         skillSlot.addEventListener("click", () => {
+            makeSoundEffect("../assets/audio/metal-clang.mp3")
             selectedSkill = i;
             setStatsMessage(hero.skillsToChoose[i])
         })
@@ -785,9 +800,11 @@ const setBattle = () => {
 
         lifePotionBtlImg.setAttribute("disabled", "true")
     }
+    
     if(!searchItem(new SmallManaPotion()) || hero.inventory[searchItemId(new SmallManaPotion())].quant < 1) {
         manaPotionBtlImg.setAttribute("disabled", "true")
     }
+    
     attackButton.setAttribute("style", `background-image: url(${hero.equippedWeapon.img});`)
    
     
@@ -822,6 +839,7 @@ const searchItemId = (itemToSearch) => {
     return false;
 }
 const openVictoryScreen = (monsterDefeated) => {
+    makeSoundEffect("../assets/audio/tada-fanfare-01.mp3")
     lootMessageBox.innerText = "";
     const levelUpMessage = document.querySelector(".level-up-message")
     levelUpMessage.innerHTML = ""
@@ -865,10 +883,24 @@ const openVictoryScreen = (monsterDefeated) => {
     setMapStats()
 }
 
+const openDefeatedScreen = () => {
+    defeatedScreen.setAttribute("style", "display: flex;")
+    battleScreen.setAttribute("style", "display: none;")
+    const defeatedText = document.querySelector(".defeated-text")
+    defeatedText.innerHTML = `You died at level ${hero.level} and need to start over.`
+    const startOverButton = document.querySelector(".start-over-button")
+    startOverButton.addEventListener("click", ()=>{
+        location.reload()
+    })
+}
+
 const battleTurn = (actionType) => {
     let damage;
+
+    
     
     if (actionType == "weaponAttack") {
+        makeSoundEffect("../assets/audio/sword-sound-01.mp3")
         damage = hero.attack();
         monster.takeDamage(damage)
         battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -880,6 +912,7 @@ const battleTurn = (actionType) => {
             effectTurns = effect.turns;
         }
         if(hero.skills[0].type == "hit") {
+            makeSoundEffect("../assets/audio/sword-sound-01.mp3")
             damage = hero.skills[0].attack(hero);
             monster.takeDamage(damage)
             battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -893,6 +926,7 @@ const battleTurn = (actionType) => {
             effectTurns = effect.turns;
         }
         if(hero.skills[1].type == "hit") {
+            makeSoundEffect("../assets/audio/sword-sound-01.mp3")
             damage = hero.skills[1].attack(hero);
             monster.takeDamage(damage)
             battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -923,24 +957,30 @@ const battleTurn = (actionType) => {
                     battleMessage.innerHTML = `${monster.name} lost ${effect.damage} hitpoints due to ${effect.type}`
                     setBattle()
                 }
-            }, 500)
+            }, 700)
         }
     }
 
     
     if(monster.life > 0){
         setTimeout(() => {
+            makeSoundEffect("../assets/audio/sword-sound-01.mp3")
             let monsterDamage = monster.attack()
             hero.takeDamage(monsterDamage)
-            battleMessage.innerHTML = `You lost ${monsterDamage} hitpoints to a ${monster.name} attack`
+            battleMessage.innerHTML = `You lost ${Math.max(0, monsterDamage - hero.totalArmor)} hitpoints to a ${monster.name} attack`
             for (let i = 0; i < actionList.length; i++) {
                 
                     actionList[i].removeAttribute("disabled")
                 
                 
             }
+            if (hero.life <= 0) {
+                openDefeatedScreen()
+                return
+            }
             setBattle()
-        }, 500)
+        }, 700)
+
         
     } else {
         for (let i = 0; i < actionList.length; i++) {
@@ -959,9 +999,14 @@ const battleTurn = (actionType) => {
             }
             
         }
-        openVictoryScreen(monster)
+        setTimeout(() => {
+
+            openVictoryScreen(monster)
+        }, 500)
+        
         return
     }
+    
     
 
     
@@ -980,6 +1025,7 @@ const setMapStats = () => {
 
 
 const openStore = () => {
+    makeSoundEffect("../assets/audio/metal-clang.mp3")
     onMap=false;  
     storeScreen.setAttribute("style", "display: flex;")
     sellingStoreScreen.setAttribute("style", "display: none;")
@@ -991,6 +1037,7 @@ const buyItem = (option, quantInput) => {
         const quantityToBuy = parseInt(quantInput.value)
         if(quantityToBuy > 0) {
             if(hero.gold >= (option.price * quantityToBuy)) {
+                makeSoundEffect("../assets/audio/coin-dropped.mp3")
                 hero.gold -= (option.price * quantityToBuy);
                 storeMessage.innerHTML = `You bought ${quantityToBuy} ${option.item.name} for ${option.price * quantityToBuy} gold`
                 for (let i = 0; i < quantityToBuy; i++) {
@@ -1006,6 +1053,7 @@ const buyItem = (option, quantInput) => {
         
     } else {
         if(hero.gold >= option.price) {
+            makeSoundEffect("../assets/audio/coin-dropped.mp3")
             storeMessage.innerHTML = `You bought ${option.item.name} for ${option.price} gold`
             hero.gold -= option.price
             hero.inventory.push(option.item)
@@ -1019,6 +1067,7 @@ const sellItem = (option, quantInput) => {
         const quantityToSell = parseInt(quantInput.value)
         if(quantityToSell > 0) {
             if(option.quant > quantityToSell) {
+                makeSoundEffect("../assets/audio/coin-dropped.mp3")
                 hero.gold += (option.sellingPrice * quantityToSell);
                 option.quant -= quantityToSell
                 sellingStoreMessage.innerHTML = `You sold ${quantityToSell} ${option.name} for ${option.sellingPrice * quantityToSell} gold`
@@ -1033,7 +1082,7 @@ const sellItem = (option, quantInput) => {
         }
         
     } else {
-        
+        makeSoundEffect("../assets/audio/coin-dropped.mp3")
         sellingStoreMessage.innerHTML = `You sold ${option.name} for ${option.sellingPrice} gold`
         hero.gold += option.sellingPrice
         hero.inventory.splice(searchItemId(option), 1)
@@ -1043,13 +1092,17 @@ const sellItem = (option, quantInput) => {
 }
 
 const openSellingStore = () => {
+    makeSoundEffect("../assets/audio/metal-clang.mp3")
     onMap=false;  
     sellingStoreScreen.setAttribute("style", "display: flex;")
     storeScreen.setAttribute("style", "display: none;")
     setSellingStoreItems()
 }
 
-
+const makeSoundEffect = (source) => {
+    soundEffect.setAttribute("src", source)
+    soundEffect.play()
+}
 
 setMapStats()
 
