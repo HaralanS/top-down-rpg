@@ -1,4 +1,4 @@
-.store-screen {
+.selling-store-screen{
     height: 448px;
     width: 448px;
     background: rgb(184, 185, 163);
@@ -9,7 +9,7 @@
     display: none;
     flex-direction: column;
 }
-.store-title {
+.selling-store-title {
     background: yellow;
     width: 100%;
     height: 40px;
@@ -17,22 +17,22 @@
     padding: 8px;
 }
 
-.store-message{
+.selling-store-message{
     height: 100px;
     padding: 8px;
 }
 
-.img-name-store-box{
+.selling-img-name-store-box{
     display: flex;
     gap: 8px;
 }
-.store-items-box{
+.selling-store-items-box{
     padding: 8px;
     /* background: red; */
     height: 250px;
     overflow-y: scroll;
 }
-.store-item-container{
+.selling-store-item-container{
     height: 40px;
     padding: 4px 8px;
     display: flex;
@@ -42,35 +42,35 @@
     cursor: pointer;
     background: rgb(73, 73, 73);
 }
-.store-item-container p {
+.selling-store-item-container p {
     margin-top: 4px;
     color: white;
 }
-.store-item-img {
+.selling-store-item-img {
     height: 32px;
     background: white;
     border-radius: 2px;
 }
 
-.buy-buttons {
+.selling-buy-buttons {
     margin-top: 4px;
     width: 60px;
     height: 24px;
     cursor: pointer;
 }
 
-.store-item-input {
+.selling-store-item-input {
     margin-top: 4px;
     width: 50px;
     height: 24px;
 }
 
-.store-buttons-box {
+.selling-store-buttons-box {
     display: flex;
     padding: 8px;
     justify-content: space-around;
 }
-.store-buttons {
+.selling-store-buttons {
     padding: 4px;
     width: 100px;
     cursor: pointer;

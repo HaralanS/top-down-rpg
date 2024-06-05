@@ -2,7 +2,7 @@ import Warrior from "./player-classes.js";
 import { SmallPowerRing, SmallRingOfEndurance } from "./item-classes/rings.js";
 import { SmallProtectionAmulet } from "./item-classes/trinkets.js";
 import { BattleAxe, SteelSword } from "./item-classes/weapons.js";
-import { map01 } from "./maps.js";
+import { map01, map02 } from "./maps.js";
 import { SmallHealthPotion, SmallManaPotion } from "./item-classes/potions.js";
 import { RedApple } from "./item-classes/food.js";
 import { Strike } from "./skills.js";
@@ -18,33 +18,20 @@ hero.inventory.push(new BattleAxe())
 hero.inventory.push(new SmallHealthPotion())
 hero.inventory.push(new SmallManaPotion())
 
-const storeItemsList = [
-    {
-        item: new SmallHealthPotion(),
-        price: 10
-    },
-    {
-        item: new SmallManaPotion(),
-        price: 10
-    },
-    {
-        item: new SteelSword(),
-        price: 80
-    },
-    {
-        item: new ChainArmor(),
-        price: 70
-    },
-]
+let storeItemsList = []
 
 
-const mapa01 = map01.map;
-const respawnArea = map01.respawnMap
 
-let charPositionX = 7;
-let charPositionY = 7;
-let mapPositionX = 256;
-let mapPositionY = 256;
+let map;
+let respawnArea;
+let mapToEnter;
+let charXtoGo;
+let charYtoGo;
+
+let charPositionX;
+let charPositionY;
+let mapPositionX;
+let mapPositionY;
 let action = 1;
 let moveCooldown = false;
 let onMap = true;
@@ -56,7 +43,24 @@ let effectTurns;
 let steps = 0;
 const experienceList = hero.experienceList;
 
-const bts = "../assets/img/battleScene-01.png";
+let bts = "../assets/img/battleScene-01.png";
+
+const mapa01Div = document.querySelector(".mapa01");
+
+const setMap = (currentMap) => {
+    map = currentMap
+    charPositionX = currentMap.initialCharPositionX
+    charPositionY = currentMap.initialCharPositionY
+    mapPositionX = currentMap.mapPositionX
+    mapPositionY = currentMap.mapPositionY
+    respawnArea = currentMap.respawnMap
+    mapa01Div.innerText = "";
+    mapa01Div.setAttribute("style", `background-image: url(${currentMap.mapBg}); height: ${currentMap.height}px; width: ${currentMap.width}px; right: ${currentMap.mapPositionX}px; bottom: ${currentMap.mapPositionY}px;`)
+    
+    
+}
+setMap(map01)
+
 
 const createSkillButtons =() => {
     batteActionsBox.innerText = ""
@@ -84,7 +88,7 @@ const createSkillButtons =() => {
 }
 
 const screen = document.querySelector(".screen");
-const mapa01Div = document.querySelector(".mapa01");
+
 const charDiv = document.querySelector(".char");
 
 const actionButton = document.querySelector(".action-button")
@@ -147,9 +151,25 @@ const storeCloseButton = document.querySelector(".store-close-button")
 const storeItemsBox = document.querySelector(".store-items-box")
 const storeMessage = document.querySelector(".store-message")
 const storeTitle = document.querySelector(".store-title")
+const storeSellingButton = document.querySelector(".store-action-button")
+const sellingStoreScreen = document.querySelector(".selling-store-screen")
+const sellingStoreCloseButton = document.querySelector(".selling-store-close-button")
+const sellingStoreItemsBox = document.querySelector(".selling-store-items-box")
+const sellingStoreMessage = document.querySelector(".selling-store-message")
+const sellingStoreTitle = document.querySelector(".selling-store-title")
 
+storeSellingButton.addEventListener("click", () => {
+    setSellingStoreStats()
+    openSellingStore()
+})
+sellingStoreCloseButton.addEventListener("click", () => {
+    openStore()
+})
 const setStoreStats = () => {
     storeTitle.innerHTML = `Store - Gold: ${hero.gold}`
+}
+const setSellingStoreStats = () => {
+    sellingStoreTitle.innerHTML = `Store - Gold: ${hero.gold}`
 }
 const setStoreItems = (itemsList) => {
     setStoreStats()
@@ -184,7 +204,10 @@ const setStoreItems = (itemsList) => {
         storeItemButton.innerHTML = "Buy"
         storeItemButton.addEventListener("click", () => {
             buyItem(itemsList[i], possibleInput)
-            possibleInput.value = 0
+            if(itemsList[i].item.stackable){
+                possibleInput.value = 0
+            }
+            
             setStoreStats()
         })
         storeItemContainer.appendChild(storeItemButton)
@@ -192,8 +215,78 @@ const setStoreItems = (itemsList) => {
         storeItemsBox.appendChild(storeItemContainer)
     }
 }
+const setSellingStoreItems = () => {
+    sellingStoreItemsBox.innerText = ""
+    for (let i = 0; i < hero.inventory.length; i++){
+        let possibleInput;
+        const storeItemContainer = document.createElement("div")
+        storeItemContainer.classList.add("selling-store-item-container")
+        
+        const storeItemImg = document.createElement("img")
+        storeItemImg.classList.add("selling-store-item-img")
+        storeItemImg.setAttribute("src", hero.inventory[i].img)
+        storeItemContainer.appendChild(storeItemImg)
+        
+        const storeItemName = document.createElement("p")
+        storeItemName.innerHTML = hero.inventory[i].name + " - " + hero.inventory[i].sellingPrice + " gold"
+        storeItemName.addEventListener("click", () => {
+            setSellingStoreItemMessage(hero.inventory[i])
+        })
+        storeItemContainer.appendChild(storeItemName)
 
+        // ------------
+        if(hero.inventory[i].stackable) {
+            storeItemName.innerHTML += " - " + hero.inventory[i].quant
+            const storeItemInput = document.createElement("input")
+            storeItemInput.setAttribute("type", "number")
+            storeItemInput.classList.add("selling-store-item-input")
+            possibleInput = storeItemInput
+            storeItemContainer.appendChild(storeItemInput)
+        }
 
+        const storeItemButton = document.createElement("button")
+        storeItemButton.classList.add("selling-buy-buttons")
+        storeItemButton.innerHTML = "Sell"
+        storeItemButton.addEventListener("click", () => {
+            sellItem(hero.inventory[i], possibleInput)
+            if(hero.inventory[i].stackable){
+                possibleInput.value = 0
+            }
+            
+            setSellingStoreStats()
+        })
+        storeItemContainer.appendChild(storeItemButton)
+
+        sellingStoreItemsBox.appendChild(storeItemContainer)
+
+    }
+}
+
+const setSellingStoreItemMessage = (item) => {
+    sellingStoreMessage.innerHTML = item.name + " - Selling price: " + item.sellingPrice;
+    if(item.attack > 0) {
+        sellingStoreMessage.innerHTML += " - Attack: +" + item.attack;
+    }
+    if(item.armor > 0) {
+        sellingStoreMessage.innerHTML += " - Armor: +" + item.armor;
+    }
+    if(item.precision > 0) {
+        sellingStoreMessage.innerHTML += " - Precision: +" + item.precision + "%";
+    }
+    if(item.critical > 0) {
+        sellingStoreMessage.innerHTML += " - Critical: +" + item.critical + "%";
+    }
+    if(item.maxLife > 0) {
+        sellingStoreMessage.innerHTML += " - Life: +" + item.maxLife;
+    }
+    if(item.maxMana > 0) {
+        sellingStoreMessage.innerHTML += " - Mana: +" + item.maxMana;
+    }
+    if(item.strength > 0) {
+        sellingStoreMessage.innerHTML += " - Strength: +" + item.strength;
+    }
+    sellingStoreMessage.innerHTML += " - " + item.info;
+}
 const setStoreItemMessage = (item) => {
     storeMessage.innerHTML = item.name + " - Selling price: " + item.sellingPrice;
     if(item.attack > 0) {
@@ -302,50 +395,6 @@ statsButton.addEventListener("click", () => {
 );
 
 
-const setMap = () => {
-    mapa01Div.innerText = "";
-    for (let i = 0; i < mapa01.length; i++) {
-        for (let j = 0; j < mapa01[i].length; j++) {
-            const tile = document.createElement("div");
-            tile.className = "tile";
-            if(mapa01[i][j] == 0) {
-                tile.classList.add("wall");
-            }
-            if(mapa01[i][j] == 1) {
-                // const random = Math.random() * 10;
-                // if(random < 5) {
-                //     tile.classList.add("grass");
-                // } else {
-                //     tile.classList.add("grass2");
-                // }
-                tile.classList.add("grass");
-                
-            }
-            if(mapa01[i][j] == 2) {
-                tile.classList.add("center");
-            }
-            if(mapa01[i][j] == 3) {
-                tile.classList.add("door");
-            }
-            if(mapa01[i][j] == 4) {
-                tile.classList.add("seller-01");
-            }
-            if(mapa01[i][j] == 5) {
-                tile.classList.add("battle-tile");
-            }
-            if(mapa01[i][j] == 6) {
-                tile.classList.add("tall-grass");
-            }
-            mapa01Div.appendChild(tile)
-        }
-        
-    }
-    
-}
-setMap()
-
-
-
 document.addEventListener("keydown", function(e){
     if(onMap) {
         if(e.key == "ArrowDown"){
@@ -370,16 +419,16 @@ document.addEventListener("keydown", function(e){
 })
 const checkWalkableTile = (direction) => {
     if(direction == "up") {
-        return (mapa01[charPositionY - 1][charPositionX] == 1 || mapa01[charPositionY - 1][charPositionX] == 5 || mapa01[charPositionY - 1][charPositionX] == 6)  && !moveCooldown
+        return (map.map[charPositionY - 1][charPositionX] == 1)  && !moveCooldown
     }
     if(direction == "down") {
-        return (mapa01[charPositionY + 1][charPositionX] == 1 || mapa01[charPositionY + 1][charPositionX] == 5 || mapa01[charPositionY + 1][charPositionX] == 6)  && !moveCooldown
+        return (map.map[charPositionY + 1][charPositionX] == 1)  && !moveCooldown
     }
     if(direction == "left") {
-        return (mapa01[charPositionY][charPositionX - 1] == 1 || mapa01[charPositionY][charPositionX -1] == 5 || mapa01[charPositionY][charPositionX -1] == 6)  && !moveCooldown
+        return (map.map[charPositionY][charPositionX - 1] == 1)  && !moveCooldown
     }
     if(direction == "right") {
-        return (mapa01[charPositionY][charPositionX + 1] == 1 || mapa01[charPositionY][charPositionX +1] == 5 || mapa01[charPositionY][charPositionX +1] == 6)  && !moveCooldown
+        return (map.map[charPositionY][charPositionX + 1] == 1)  && !moveCooldown
     }
     
 }
@@ -473,44 +522,43 @@ const goRight = () => {
     }
     checkAction()
 }
-const openDoor =()=>{
-    mapa01[4][2] = mapa01[4][2] == 3 ? 1 : 3;
 
-    setMap()
-}
 const takeAction = () => {
-    if(action == 2) {
-        // actionButton.innerHTML = actionButton.innerHTML == "Open" ? "Close" : "Open";
-        openDoor()
-    }
+    
     if (action == 3) {
         openStore()
+    }
+    if (action == 2) {
+        
+        setMap(mapToEnter)
+        // charPositionX = charXtoGo
+        // charPositionY = charYtoGo
+        action = 0;
+        actionButton.setAttribute("style", "background: none; cursor: auto")
+        actionButton.innerHTML = ""
     }
 }
 const checkAction = () => {
     steps++;
-    let respawnMob = map01.checkRespawn(charPositionX, charPositionY)
+    let mapAction = map.checkAction(charPositionX, charPositionY)
+    let respawnMob = map.checkRespawn(charPositionX, charPositionY)
     if(respawnMob.name.length > 1 && steps > 3){
         steps = 0;
         openBattle(respawnMob)
     }
     
-    if(charPositionX == 7 && charPositionY == 7) {
-        action = 1;
-        // actionButton.setAttribute("style", "background: white; cursor: pointer")
-    } else if(charPositionX == 2 && charPositionY == 5 || charPositionX == 2 && charPositionY == 3) {
-        action = 2;
-        actionButton.innerHTML = "Open/Close";
-        actionButton.setAttribute("style", "background: white; cursor: pointer")
-    } else if(mapa01[charPositionY-1][charPositionX] == 4) {
+    if(mapAction.action == 3) {
         action = 3;
-        actionButton.innerHTML = "Buy/Sell";
+        storeItemsList = mapAction.itemsList
+        actionButton.innerHTML = mapAction.buttonName;
         actionButton.setAttribute("style", "background: white; cursor: pointer")
-    } else if(mapa01[charPositionY][charPositionX] == 5) {
-        console.log("to aqui")
-        openBattle(new Goblin())
-        // actionButton.innerHTML = "Buy/Sell";
-        // actionButton.setAttribute("style", "background: white; cursor: pointer")
+    } else if(mapAction.action == 2) {
+        mapToEnter = mapAction.mapToEnter
+        charXtoGo = mapAction.charPositionX
+        charYtoGo = mapAction.charPositionY
+        actionButton.innerHTML = "Enter";
+        actionButton.setAttribute("style", "background: white; cursor: pointer")
+        action = 2
     } else {
         action = 0;
         actionButton.setAttribute("style", "background: none; cursor: auto")
@@ -930,9 +978,11 @@ const setMapStats = () => {
     mapXpText.innerHTML = `${hero.experience}/${experienceList[hero.level]}`
 }
 
+
 const openStore = () => {
     onMap=false;  
     storeScreen.setAttribute("style", "display: flex;")
+    sellingStoreScreen.setAttribute("style", "display: none;")
     setStoreItems(storeItemsList)
 }
 const buyItem = (option, quantInput) => {
@@ -957,11 +1007,49 @@ const buyItem = (option, quantInput) => {
     } else {
         if(hero.gold >= option.price) {
             storeMessage.innerHTML = `You bought ${option.item.name} for ${option.price} gold`
+            hero.gold -= option.price
+            hero.inventory.push(option.item)
         } else {
             storeMessage.innerHTML = "You don't have enough gold"
         }
     }
 }
+const sellItem = (option, quantInput) => {
+    if(option.stackable) {
+        const quantityToSell = parseInt(quantInput.value)
+        if(quantityToSell > 0) {
+            if(option.quant > quantityToSell) {
+                hero.gold += (option.sellingPrice * quantityToSell);
+                option.quant -= quantityToSell
+                sellingStoreMessage.innerHTML = `You sold ${quantityToSell} ${option.name} for ${option.sellingPrice * quantityToSell} gold`
+                
+            } else if(option.quant == quantityToSell){
+                hero.inventory.splice(searchItemId(option), 1)
+            } else {
+                sellingStoreMessage.innerHTML = "You need to select less or equal the quantity of the item you want to sell"
+            }
+        } else {
+            sellingStoreMessage.innerHTML = "Quantity need to be higher than 0"
+        }
+        
+    } else {
+        
+        sellingStoreMessage.innerHTML = `You sold ${option.name} for ${option.sellingPrice} gold`
+        hero.gold += option.sellingPrice
+        hero.inventory.splice(searchItemId(option), 1)
+        
+    }
+    openSellingStore()
+}
+
+const openSellingStore = () => {
+    onMap=false;  
+    sellingStoreScreen.setAttribute("style", "display: flex;")
+    storeScreen.setAttribute("style", "display: none;")
+    setSellingStoreItems()
+}
+
+
 
 setMapStats()
 

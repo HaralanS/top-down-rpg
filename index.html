@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/styles/battle-screen-styles.css">
     <link rel="stylesheet" href="assets/styles/victory-screen.css">
     <link rel="stylesheet" href="assets/styles/store-screen-styles.css">
+    <link rel="stylesheet" href="assets/styles/selling-store-screen-styles.css">
     
     <title>Top Down Game</title>
 </head>
@@ -101,7 +102,9 @@
 
             </div>
             <div class="battle-scene">
-                <div class="battle-messages"></div>
+                <div class="battle-messages-box">
+                    <p class="battle-messages"></p>
+                </div>
                 <div class="fighters-box">
                     <div class="hero-box">
                         <div class="life-mana-box">
@@ -114,7 +117,7 @@
                             <p class="hero-life-bar-text">100</p>
                             <p class="hero-mana-bar-text">50</p>
                         </div>
-                        <div class="hero-img-box"></div>
+                        <div class="hero-img-box"><img class="hero-hit-animation" alt=""></div>
                     </div>
                     <div class="monster-box">
                         <div class="life-mana-box">
@@ -124,7 +127,7 @@
                             
                             <p class="monster-life-bar-text">100</p>
                         </div>
-                        <div class="monster-img-box"></div>
+                        <div class="monster-img-box"><img class="monster-hit-animation" alt=""></div>
                     </div>
                 </div>
             </div>
@@ -158,6 +161,18 @@
             <div class="store-buttons-box">
                 <button class="store-action-button store-buttons">Sell Items</button>
                 <button class="store-close-button store-buttons">Close</button>
+            </div>
+        </div>
+        <div class="selling-store-screen">
+            <div class="selling-store-title">Store</div>
+            <div class="selling-store-message">Select an item to see the description</div>
+            <div class="selling-store-items-box">
+
+            </div>
+
+            <div class="selling-store-buttons-box">
+                <!-- <button class="selling-store-action-button store-buttons">Sell Items</button> -->
+                <button class="selling-store-close-button store-buttons">Close</button>
             </div>
         </div>
     </div>

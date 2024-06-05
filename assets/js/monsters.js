@@ -5,14 +5,14 @@ export class Goblin {
     name = "Goblin";
     life = 50;
     maxLife = 50;
-    experience = 50;
-    img = "../assets/img/goblin-01.png";
+    experience = 10;
+    img = "../assets/img/goblin-01-Sheet-export.png";
     // hitImg = "../assets/img/goblin-hit-01.png";
     // attackImg = "../assets/img/goblin-attack-01.png";
     // deadImg = "../assets/img/goblin-dead-01.png";
 
     dropGold(){
-        return Math.ceil(3 + Math.random() * 12);
+        return Math.ceil(3 + Math.random() * 6);
     }
     attack() {
         const random = Math.random() * 100;
