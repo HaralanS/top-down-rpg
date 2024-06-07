@@ -11,10 +11,10 @@ import { ChainArmor } from "./item-classes/armors.js";
 
 
 const hero = new Warrior();
-hero.inventory.push(new SmallRingOfEndurance())
-hero.inventory.push(new SmallProtectionAmulet())
-hero.inventory.push(new SteelSword())
-hero.inventory.push(new BattleAxe())
+// hero.inventory.push(new SmallRingOfEndurance())
+// hero.inventory.push(new SmallProtectionAmulet())
+// hero.inventory.push(new SteelSword())
+// hero.inventory.push(new BattleAxe())
 hero.inventory.push(new SmallHealthPotion())
 hero.inventory.push(new SmallManaPotion())
 
@@ -173,6 +173,7 @@ const openTransitionScreen = () => {
 const defeatedScreen = document.querySelector(".defeated-screen")
 
 storeSellingButton.addEventListener("click", () => {
+    makeSoundEffect("../assets/audio/metal-clang.mp3")
     setSellingStoreStats()
     openSellingStore()
 })
@@ -855,13 +856,17 @@ const searchItemId = (itemToSearch) => {
 }
 const openVictoryScreen = (monsterDefeated) => {
     makeSoundEffect("../assets/audio/tada-fanfare-01.mp3")
+    
     lootMessageBox.innerText = "";
+
     const levelUpMessage = document.querySelector(".level-up-message")
+    levelUpMessage.setAttribute("style", "display: none;")
     levelUpMessage.innerHTML = ""
     hero.experience += monsterDefeated.experience;
+    
     if (hero.experience >= hero.experienceList[hero.level]) {
         hero.levelUp(monsterDefeated.experience)
-        
+        levelUpMessage.setAttribute("style", "display: block;")
         levelUpMessage.innerHTML = `Congrats! You reached level ${hero.level}`
     }
     let loot = monsterDefeated.dropItems()
@@ -876,14 +881,25 @@ const openVictoryScreen = (monsterDefeated) => {
     for (let i = 0; i < loot.length; i++) {
         const lootMessage = document.createElement("p")
         lootMessage.classList.add("loot-message")
+        const lootMessageSlot = document.createElement("div")
+        lootMessageSlot.classList.add("loot-message-slot")
+        const lootImg = document.createElement("img")
+        lootImg.classList.add("loot-image")
+        
         if(loot[i].stackable){
             lootQuant(loot[i])
             lootMessage.innerHTML = `You found ${loot[i].name}`
-            lootMessageBox.appendChild(lootMessage)
+            lootImg.setAttribute("src", loot[i].img)
+            lootMessageSlot.appendChild(lootImg)
+            lootMessageSlot.appendChild(lootMessage)
+            lootMessageBox.appendChild(lootMessageSlot)
         } else {
             hero.inventory.push(loot[i])
             lootMessage.innerHTML = `You found ${loot[i].name}`
-            lootMessageBox.appendChild(lootMessage)
+            lootImg.setAttribute("src", loot[i].img)
+            lootMessageSlot.appendChild(lootImg)
+            lootMessageSlot.appendChild(lootMessage)
+            lootMessageBox.appendChild(lootMessageSlot)
         }
         
     }
@@ -1127,7 +1143,6 @@ const sellItem = (option, quantInput) => {
 }
 
 const openSellingStore = () => {
-    makeSoundEffect("../assets/audio/metal-clang.mp3")
     onMap=false;  
     sellingStoreScreen.setAttribute("style", "display: flex;")
     storeScreen.setAttribute("style", "display: none;")
@@ -1143,8 +1158,6 @@ setMapStats()
 
 lootQuant(new RedApple)
 lootQuant(new RedApple)
-lootQuant(new SmallHealthPotion)
-lootQuant(new SmallHealthPotion)
 lootQuant(new SmallHealthPotion)
 checkAction()
 

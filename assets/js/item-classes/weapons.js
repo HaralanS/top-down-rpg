@@ -18,14 +18,14 @@ export class WoodenSword {
 export class Mace {
     name = "Mace";
     type = "weapon";
-    attack = 5;
-    sellingPrice = 5;
+    attack = 6;
+    sellingPrice = 12;
     stackable = false;
     precision = 2;
     critical = 2;
     maxLife = 0;
     maxMana = 0;
-    strength = 1;
+    strength = 2;
     armor = 0;
     action = "equip";
     img = "../assets/img/mace-01.png";
@@ -38,7 +38,7 @@ export class SteelSword {
     attack = 4;
     sellingPrice = 10;
     stackable = false;
-    precision = 15;
+    precision = 10;
     critical = 7;
     maxLife = 0;
     maxMana = 0;
@@ -54,7 +54,7 @@ export class BattleAxe {
     attack = 8;
     sellingPrice = 15;
     stackable = false;
-    precision = 10;
+    precision = 15;
     critical = 5;
     maxLife = 0;
     maxMana = 0;

@@ -26,15 +26,15 @@ export class InflictWound {
     type = "effect";
     manaCost = 15;
     level = 1;
-    skillCost = 5;
-    info = "Inflicts a bleed equal to your total attack stat value for 3 turns";
+    skillCost = 4;
+    info = "Inflicts a bleed equal to your total attack stat value for 4 turns";
     img = "../assets/img/inflict-wound.png";
     
     effect(hero){
         hero.mana -= this.manaCost;
         return {
         type: "bleeding",
-        turns: 3,
+        turns: 4,
         damage: hero.totalAttack
         }
     }
