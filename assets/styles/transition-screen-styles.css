@@ -1,0 +1,25 @@
+.transition-screen {
+    height: 448px;
+    width: 448px;
+    background: black;
+    border: 2px solid black;
+    margin: auto;
+    position: relative;
+    bottom: 738px;
+    display: none;
+    flex-direction: column;
+}
+.transition-animation-box{
+    background-image: url("../img/char-01-Sheet-export.png");
+    background-position: -64px;
+    height: 64px;
+    width: 64px;
+    animation: walk-transition infinite 400ms step-end;
+    margin: auto;
+}
+
+@keyframes walk-transition {
+    0%   {background-position-x: -64px;}
+    50%  {background-position-x: -128px;}
+    100%   {background-position-x: -64px;}
+}

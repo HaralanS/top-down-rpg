@@ -1,4 +1,4 @@
-import { Goblin } from "./monsters.js";
+import { Goblin, GoblinSoldier } from "./monsters.js";
 import { SteelSword } from "./item-classes/weapons.js";
 import { SmallHealthPotion, SmallManaPotion } from "./item-classes/potions.js";
 import { ChainArmor } from "./item-classes/armors.js";
@@ -97,7 +97,7 @@ export const map01 = {
                 buttonName: "Enter",
                 mapToEnter: map03,
                 charPositionX: 9,
-                charPositionY: 19,
+                charPositionY: 18,
             }
         }  else {
             return {
@@ -182,7 +182,7 @@ export const map03 = {
         [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
         [0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
         [0,1,1,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0]
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0]
     ],
     respawnMap:[
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -194,31 +194,37 @@ export const map03 = {
         [0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0],
         [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
         [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0],
-        [0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0],
-        [0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-        [0,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,2,2,0,0],
-        [0,2,2,2,0,0,0,0,0,0,0,0,1,0,0,2,2,2,2,0],
-        [0,0,2,2,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,0],
-        [0,0,2,2,2,0,1,1,1,0,1,1,0,2,2,2,2,2,2,0],
-        [0,0,2,2,0,0,0,1,1,1,1,0,1,2,2,2,2,2,2,0],
+        [0,0,0,0,2,2,1,1,1,1,1,1,1,0,0,0,1,1,1,0],
+        [0,0,2,2,2,2,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
+        [0,2,2,0,2,2,0,0,1,1,0,0,0,0,0,0,2,2,0,0],
+        [0,2,2,0,0,0,0,0,0,0,0,0,1,0,0,2,2,2,2,0],
+        [0,0,2,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,0],
+        [0,0,2,0,2,0,1,1,1,0,1,1,0,2,2,2,2,2,2,0],
+        [0,0,2,0,0,0,0,1,1,1,1,0,1,2,2,2,2,2,2,0],
         [0,2,2,2,1,1,0,0,0,1,1,0,0,2,2,2,2,0,0,0],
         [0,2,2,2,0,0,1,1,0,0,0,0,1,2,2,2,0,0,0,0],
         [0,2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ],
-    mapBg: "../assets/img/goblin-forest-01-sketch.png",
+    mapBg: "../assets/img/goblin-forest-01.png",
     height: 1280,
     width: 1280,
     initialCharPositionX: 9,
-    initialCharPositionY: 19,
+    initialCharPositionY: 18,
     mapPositionX: 384,
-    mapPositionY: 1024,
+    mapPositionY: 960,
     checkRespawn(positionX, positionY){
         
         if(this.respawnMap[positionY][positionX] == 1) {
             const random = Math.random() * 100;
             if(random > 90) {
                 return new Goblin()
+            }
+        } 
+        if(this.respawnMap[positionY][positionX] == 2) {
+            const random = Math.random() * 100;
+            if(random > 90) {
+                return new GoblinSoldier()
             }
         }
         return {
@@ -251,12 +257,12 @@ export const map03 = {
                     },
                 ]
             }
-        } else if(this.map[posY-1][posX] == 2){
+        } else if(this.map[posY+1][posX] == 2){
             return {
                 action: 2,
                 buttonName: "Enter",
-                mapToEnter: map02,
-                charPositionX: 5,
+                mapToEnter: map01,
+                charPositionX: 7,
                 charPositionY: 3,
             }
         } else {

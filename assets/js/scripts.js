@@ -48,6 +48,7 @@ let bts = "../assets/img/battleScene-01.png";
 const mapa01Div = document.querySelector(".mapa01");
 
 const setMap = (currentMap) => {
+    
     map = currentMap
     charPositionX = currentMap.initialCharPositionX
     charPositionY = currentMap.initialCharPositionY
@@ -145,6 +146,8 @@ const lifePotionBtlImg = document.querySelector(".life-potion-button")
 const manaPotionBtlImg = document.querySelector(".mana-potion-button")
 const attackButton = document.querySelector(".attack-button")
 const battleActionContainer = document.querySelector(".battle-actions-box")
+const heroVfxAnimation = document.querySelector(".hero-hit-animation")
+const monsterVfxAnimation = document.querySelector(".monster-hit-animation")
 
 const lootMessageBox = document.querySelector(".loot-message-box")
 
@@ -159,6 +162,13 @@ const sellingStoreCloseButton = document.querySelector(".selling-store-close-but
 const sellingStoreItemsBox = document.querySelector(".selling-store-items-box")
 const sellingStoreMessage = document.querySelector(".selling-store-message")
 const sellingStoreTitle = document.querySelector(".selling-store-title")
+
+const transitionScreen = document.querySelector(".transition-screen")
+
+const openTransitionScreen = () => {
+    onMap=false;
+    transitionScreen.setAttribute("style", "display: flex;")
+}
 
 const defeatedScreen = document.querySelector(".defeated-screen")
 
@@ -539,8 +549,12 @@ const takeAction = () => {
         openStore()
     }
     if (action == 2) {
-        
+        openTransitionScreen()
         setMap(mapToEnter)
+        setTimeout(()=>{
+            onMap=true
+            transitionScreen.setAttribute("style", "display: none;")
+        }, 1000)
         // charPositionX = charXtoGo
         // charPositionY = charYtoGo
         action = 0;
@@ -700,6 +714,7 @@ const closePopUp = () => {
     playerStatsSection.setAttribute("style", "display: none;")
     inventorySection.setAttribute("style", "display: none;")
     storeScreen.setAttribute("style", "display: none;")
+    transitionScreen.setAttribute("style", "display: none;")
 }
 const setPlayerStats = () => {
     skillsBox.innerText = "";
@@ -901,6 +916,10 @@ const battleTurn = (actionType) => {
     
     if (actionType == "weaponAttack") {
         makeSoundEffect("../assets/audio/sword-sound-01.mp3")
+        monsterVfxAnimation.setAttribute("style", "display: block;")
+        setTimeout(()=>{
+            monsterVfxAnimation.setAttribute("style", "display: none;")
+        }, 300)
         damage = hero.attack();
         monster.takeDamage(damage)
         battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -913,6 +932,10 @@ const battleTurn = (actionType) => {
         }
         if(hero.skills[0].type == "hit") {
             makeSoundEffect("../assets/audio/sword-sound-01.mp3")
+            monsterVfxAnimation.setAttribute("style", "display: block;")
+            setTimeout(()=>{
+                monsterVfxAnimation.setAttribute("style", "display: none;")
+            }, 300)
             damage = hero.skills[0].attack(hero);
             monster.takeDamage(damage)
             battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -927,6 +950,10 @@ const battleTurn = (actionType) => {
         }
         if(hero.skills[1].type == "hit") {
             makeSoundEffect("../assets/audio/sword-sound-01.mp3")
+            monsterVfxAnimation.setAttribute("style", "display: block;")
+            setTimeout(()=>{
+                monsterVfxAnimation.setAttribute("style", "display: none;")
+            }, 300)
             damage = hero.skills[1].attack(hero);
             monster.takeDamage(damage)
             battleMessage.innerHTML = `You deal ${damage} hitpoints on the ${monster.name}`
@@ -965,6 +992,10 @@ const battleTurn = (actionType) => {
     if(monster.life > 0){
         setTimeout(() => {
             makeSoundEffect("../assets/audio/sword-sound-01.mp3")
+            heroVfxAnimation.setAttribute("style", "display: block;")
+            setTimeout(()=>{
+                heroVfxAnimation.setAttribute("style", "display: none;")
+            }, 300)
             let monsterDamage = monster.attack()
             hero.takeDamage(monsterDamage)
             battleMessage.innerHTML = `You lost ${Math.max(0, monsterDamage - hero.totalArmor)} hitpoints to a ${monster.name} attack`
@@ -1071,9 +1102,13 @@ const sellItem = (option, quantInput) => {
                 hero.gold += (option.sellingPrice * quantityToSell);
                 option.quant -= quantityToSell
                 sellingStoreMessage.innerHTML = `You sold ${quantityToSell} ${option.name} for ${option.sellingPrice * quantityToSell} gold`
+                setSellingStoreStats()
                 
             } else if(option.quant == quantityToSell){
+                makeSoundEffect("../assets/audio/coin-dropped.mp3")
+                hero.gold += (option.sellingPrice * quantityToSell);
                 hero.inventory.splice(searchItemId(option), 1)
+                setSellingStoreStats()
             } else {
                 sellingStoreMessage.innerHTML = "You need to select less or equal the quantity of the item you want to sell"
             }
@@ -1086,7 +1121,7 @@ const sellItem = (option, quantInput) => {
         sellingStoreMessage.innerHTML = `You sold ${option.name} for ${option.sellingPrice} gold`
         hero.gold += option.sellingPrice
         hero.inventory.splice(searchItemId(option), 1)
-        
+        setSellingStoreStats()
     }
     openSellingStore()
 }

@@ -160,9 +160,24 @@
     padding-bottom: 54px;
 }
 .hero-hit-animation {
-    /* height: 128px;
-    width: 128px; */
-    /* background-image: url("../img/mana-potion-01.png");
-    background-position: center;
-    background-repeat: no-repeat;  */
+    display: none;
+    height: 128px;
+    width: 128px;
+    background-image: url("../img/pixel-vfx-01-shee.png");
+    animation: vfx 1 300ms step-end;
+
+}
+.monster-hit-animation{
+    display: none;
+    height: 128px;
+    width: 128px;
+    background-image: url("../img/pixel-vfx-01-shee.png");
+    animation: vfx 1 300ms step-end;
+}
+
+@keyframes vfx {
+    0%   {background-position-x: 0;}
+    33%  {background-position-x: -128px;}
+    66%  {background-position-x: -256px;}
+    100%   {background-position-x: 0;}
 }

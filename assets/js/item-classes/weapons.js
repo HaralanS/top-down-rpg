@@ -9,10 +9,27 @@ export class WoodenSword {
     maxLife = 0;
     maxMana = 0;
     strength = 1;
-    armor = 0;
+    armor = 1;
     action = "equip";
     img = "../assets/img/wooden-sword-01.png";
     info = "The worst sword possible.";
+}
+
+export class Mace {
+    name = "Mace";
+    type = "weapon";
+    attack = 5;
+    sellingPrice = 5;
+    stackable = false;
+    precision = 2;
+    critical = 2;
+    maxLife = 0;
+    maxMana = 0;
+    strength = 1;
+    armor = 0;
+    action = "equip";
+    img = "../assets/img/mace-01.png";
+    info = "High damage if you land a hit.";
 }
 
 export class SteelSword {
@@ -26,7 +43,7 @@ export class SteelSword {
     maxLife = 0;
     maxMana = 0;
     strength = 1;
-    armor = 0;
+    armor = 1;
     action = "equip";
     img = "../assets/img/iron-sword-01.png";
     info = "Balanced weapon.";
