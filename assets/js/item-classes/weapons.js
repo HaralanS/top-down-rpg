@@ -29,7 +29,7 @@ export class Mace {
     armor = 0;
     action = "equip";
     img = "../assets/img/mace-01.png";
-    info = "High damage if you land a hit.";
+    info = "High damage but not too accurate.";
 }
 
 export class SteelSword {
@@ -46,13 +46,29 @@ export class SteelSword {
     armor = 1;
     action = "equip";
     img = "../assets/img/iron-sword-01.png";
-    info = "Balanced weapon.";
+    info = "Swords can offer some protection due to its handler.";
+}
+export class Sabre {
+    name = "Sabre";
+    type = "weapon";
+    attack = 5;
+    sellingPrice = 15;
+    stackable = false;
+    precision = 12;
+    critical = 8;
+    maxLife = 0;
+    maxMana = 0;
+    strength = 1;
+    armor = 2;
+    action = "equip";
+    img = "../assets/img/sabre-01.png";
+    info = "Classic sabre, this sword may have belonged to a pirate one day.";
 }
 export class BattleAxe {
     name = "Battle Axe";
     type = "weapon";
-    attack = 8;
-    sellingPrice = 15;
+    attack = 9;
+    sellingPrice = 35;
     stackable = false;
     precision = 15;
     critical = 5;
@@ -62,5 +78,5 @@ export class BattleAxe {
     armor = 0;
     action = "equip";
     img = "../assets/img/battle-axe-01.png";
-    info = "Quite strong, but not so precise.";
+    info = "This is a rather accurate weapon.";
 }

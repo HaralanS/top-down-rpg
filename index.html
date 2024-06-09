@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="assets/styles/selling-store-screen-styles.css">
     <link rel="stylesheet" href="assets/styles/defeated-screen-styles.css">
     <link rel="stylesheet" href="assets/styles/transition-screen-styles.css">
+    <link rel="stylesheet" href="assets/styles/npc-screen-styles.css">
+    <link rel="stylesheet" href="assets/styles/quest-screen-styles.css">
     
-    <title>Top Down Game</title>
+    <title>The Quest for the Orb</title>
 </head>
 <body>
     <audio id="sound-effect" src="">
@@ -95,8 +97,8 @@
             <div class="inventory-message-box"></div>
             <div class="backpack-box"></div>
             <div class="inventory-buttons-box">
-                <button class="inventory-action-button">Selecione</button>
-                <button class="close-inventory-button" >Voltar</button>
+                <button class="inventory-action-button">Select</button>
+                <button class="close-inventory-button" >Close</button>
                 
             </div>
             
@@ -141,6 +143,7 @@
                     <button class="life-potion-button battle-actions-buttons"></button>
                     <button class="mana-potion-button battle-actions-buttons"></button>
                     <div class="skills-action-box"></div>
+                    <button class="leave-battle-button battle-actions-buttons">Leave Battle</button>
                 </div>
             </div>
         </div>
@@ -188,6 +191,34 @@
         </div>
         <div class="transition-screen">
             <div class="transition-animation-box"></div>
+        </div>
+        <div class="npc-screen">
+            <div class="npc-stats-box">
+                <img class="npc-face-img" src="" alt="npc face">
+                <h2 class="npc-name"></h2>
+            </div>            
+            <p class="initial-talk"></p>
+            <div class="npc-quests-box">
+
+            </div>
+            <button class="npc-close-button">Close</button>
+        </div>
+        <div class="quest-screen">
+
+            <h2 class="quest-name"></h2>          
+            <p class="quest-description"></p>
+            <div class="quest-reward-box">
+                <p class="gold-reward-text"></p>
+                <p class="xp-reward-text"></p>
+                <div class="quest-reward-items-list"></div>
+                
+            </div>
+            <p class="quest-stats-message"></p>
+            <div class="quest-buttons-box">
+                <button class="quest-action-button quest-buttons"></button>
+                <button class="quest-close-button quest-buttons">Close</button>
+            </div>
+
         </div>
     </div>
     

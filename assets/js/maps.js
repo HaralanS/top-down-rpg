@@ -1,14 +1,15 @@
-import { Goblin, GoblinSoldier } from "./monsters.js";
+import { Goblin, GoblinCaptain, GoblinChief, GoblinSoldier } from "./monsters.js";
 import { SteelSword } from "./item-classes/weapons.js";
 import { SmallHealthPotion, SmallManaPotion } from "./item-classes/potions.js";
 import { ChainArmor } from "./item-classes/armors.js";
+import { VillageChief } from "./npcs.js";
 
 export const map01 = {
     map: [
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,3,0,0,0,0,0,0,0],
         [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-        [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+        [0,1,1,1,1,5,1,1,1,1,1,1,1,1,0],
         [0,1,1,1,1,1,1,1,1,4,1,1,1,1,0],
         [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
         [0,1,1,1,1,1,1,1,1,1,0,1,1,1,0],
@@ -38,13 +39,14 @@ export const map01 = {
         [0,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ],
-    mapBg: "../assets/img/map-bg-01.png",
+    mapBg: "../assets/img/village-map-01.png",
     height: 960,
     width: 960,
     initialCharPositionX: 7,
     initialCharPositionY: 3,
     mapPositionX: 256,
     mapPositionY: 0,
+    bossIsKilled: false,
     checkRespawn(positionX, positionY){
         
         if(this.respawnMap[positionY][positionX] == 1) {
@@ -99,7 +101,13 @@ export const map01 = {
                 charPositionX: 9,
                 charPositionY: 18,
             }
-        }  else {
+        } else if(this.map[posY-1][posX] == 5){
+            return {
+                action: 5,
+                buttonName: "Talk",
+                npc: new VillageChief(),
+            }
+        } else {
             return {
                 action: 0
             }
@@ -186,17 +194,17 @@ export const map03 = {
     ],
     respawnMap:[
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,0],
-        [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-        [0,1,1,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,0],
-        [0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-        [0,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0],
-        [0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0],
-        [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
-        [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0],
-        [0,0,0,0,2,2,1,1,1,1,1,1,1,0,0,0,1,1,1,0],
-        [0,0,2,2,2,2,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-        [0,2,2,0,2,2,0,0,1,1,0,0,0,0,0,0,2,2,0,0],
+        [0,9,9,0,3,3,3,3,0,3,3,3,3,0,3,3,3,3,0,0],
+        [0,9,9,3,3,3,3,3,3,3,3,3,3,3,3,3,0,3,0,0],
+        [0,9,9,3,3,3,3,0,0,0,0,0,0,3,0,0,0,0,0,0],
+        [0,9,9,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,3,3,3,0,0,0,2,2,2,2,0,0,0,0,0,2,2,0],
+        [0,0,3,3,0,0,0,2,2,2,2,2,2,2,2,2,2,2,0,0],
+        [0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,2,2,2,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,2,2,2,0],
+        [0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [0,2,2,0,2,2,0,0,2,2,0,0,0,0,0,0,2,2,0,0],
         [0,2,2,0,0,0,0,0,0,0,0,0,1,0,0,2,2,2,2,0],
         [0,0,2,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,0],
         [0,0,2,0,2,0,1,1,1,0,1,1,0,2,2,2,2,2,2,0],
@@ -213,6 +221,7 @@ export const map03 = {
     initialCharPositionY: 18,
     mapPositionX: 384,
     mapPositionY: 960,
+    bossIsKilled: false,
     checkRespawn(positionX, positionY){
         
         if(this.respawnMap[positionY][positionX] == 1) {
@@ -225,6 +234,18 @@ export const map03 = {
             const random = Math.random() * 100;
             if(random > 90) {
                 return new GoblinSoldier()
+            }
+        }
+        if(this.respawnMap[positionY][positionX] == 3) {
+            const random = Math.random() * 100;
+            if(random > 90) {
+                return new GoblinCaptain()
+            }
+        }
+        if(this.respawnMap[positionY][positionX] == 9) {
+            // const random = Math.random() * 100;
+            if(!this.bossIsKilled) {
+                return new GoblinChief()
             }
         }
         return {

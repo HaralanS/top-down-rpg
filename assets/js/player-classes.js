@@ -33,6 +33,8 @@ class Warrior {
     skillPoints = 1;
     skills = [];
     skillsToChoose = [new Strike(), new InflictWound()];
+    activeQuests = [];
+    completedQuests = [];
     experienceList = [0, 100, 250, 375, 565, 845, 1265, 1900, 2850, 4270];
     
     setEquippmentStats() {

@@ -43,3 +43,18 @@ export class ChainArmor {
     img = "../assets/img/chain-armor-01.png";
     info = "A good armor if you are a beginner";
 }
+export class PlateArmor {
+    name = "Plate Armor";
+    type = "armor";
+    stackable = false;
+    precision = 0;
+    critical = 0;
+    maxLife = 10;
+    maxMana = 0;
+    strength = 1;
+    armor = 6;
+    action = "equip";
+    sellingPrice = 30;
+    img = "../assets/img/plate-armor-01.png";
+    info = "Large steel plates cover this armor granting the user great protection.";
+}

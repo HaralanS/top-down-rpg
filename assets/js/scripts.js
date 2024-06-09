@@ -41,6 +41,7 @@ let monster;
 let effect;
 let effectTurns;
 let steps = 0;
+let npcToTalk;
 const experienceList = hero.experienceList;
 
 let bts = "../assets/img/battleScene-01.png";
@@ -148,6 +149,7 @@ const attackButton = document.querySelector(".attack-button")
 const battleActionContainer = document.querySelector(".battle-actions-box")
 const heroVfxAnimation = document.querySelector(".hero-hit-animation")
 const monsterVfxAnimation = document.querySelector(".monster-hit-animation")
+const leaveBattleButton = document.querySelector(".leave-battle-button")
 
 const lootMessageBox = document.querySelector(".loot-message-box")
 
@@ -165,6 +167,36 @@ const sellingStoreTitle = document.querySelector(".selling-store-title")
 
 const transitionScreen = document.querySelector(".transition-screen")
 
+const npcScreen = document.querySelector(".npc-screen")
+const npcFaceImg = document.querySelector(".npc-face-img")
+const npcName = document.querySelector(".npc-name")
+const npcInitialTalk = document.querySelector(".initial-talk")
+const npcQuestsBox = document.querySelector(".npc-quests-box")
+const npcCloseButton = document.querySelector(".npc-close-button")
+
+const questScreen = document.querySelector(".quest-screen")
+const questCloseButton = document.querySelector(".quest-close-button")
+const questName = document.querySelector(".quest-name")
+const questDescription = document.querySelector(".quest-description")
+const goldRewardText = document.querySelector(".gold-reward-text")
+const xpRewardText = document.querySelector(".xp-reward-text")
+const questRewardBox = document.querySelector(".quest-reward-box")
+const questRewardItemsList = document.querySelector(".quest-reward-items-list")
+const questActionButton = document.querySelector(".quest-action-button")
+const questStatsMessage = document.querySelector(".quest-stats-message")
+
+leaveBattleButton.addEventListener("click", ()=>{
+    battleTurn("leave")
+})
+questCloseButton.addEventListener("click", ()=>{
+
+    talkToNpc()
+})
+npcCloseButton.addEventListener("click", ()=>{
+    onMap = true
+    npcScreen.setAttribute("style", "display: none;")
+    setMapStats()
+})
 const openTransitionScreen = () => {
     onMap=false;
     transitionScreen.setAttribute("style", "display: flex;")
@@ -543,7 +575,145 @@ const goRight = () => {
     }
     checkAction()
 }
+const completeQuest = (questToComplete) => {
+    let indice;
+    hero.activeQuests.map((quest, i) => {
+        if(quest.name == questToComplete.name){
+            indice = i
+        }
+    })
+    let hasItem=false;
+    hero.inventory.map((item)=>{
+        if(item.name == questToComplete.questItem.name){
+            hasItem = true
+        }
+    })
+    
+    if(questToComplete.type == "gathering") {
+        if(hasItem){
+            if(hero.inventory[searchItemId(questToComplete.questItem)].quant > questToComplete.quant) {
+                hero.inventory[searchItemId(questToComplete.questItem)].quant -= questToComplete.quant
+                hero.completedQuests.push(questToComplete)
+                hero.gold += questToComplete.goldReward
+                hero.experience += questToComplete.xpReward
+                questToComplete.itemsReward.map((item)=>{
+                    hero.inventory.push(item)
+                })
+                hero.levelUp(questToComplete.xpReward)
+                hero.activeQuests.splice(indice, 1)
+                questStatsMessage.innerHTML = "Quest completed"
+                talkToNpc()
+            } else if(hero.inventory[searchItemId(questToComplete.questItem)].quant == questToComplete.quant){
+                hero.inventory.splice(searchItemId(questToComplete.questItem), 1)
+                hero.activeQuests.splice(indice, 1)
+                hero.completedQuests.push(questToComplete)
+                hero.gold += questToComplete.goldReward
+                hero.experience += questToComplete.xpReward
+                questToComplete.itemsReward.map((item)=>{
+                    hero.inventory.push(item)
+                })
+                hero.levelUp(questToComplete.xpReward)
+                questStatsMessage.innerHTML = "Quest completed"
+                talkToNpc()
+            } else {
+                questStatsMessage.innerHTML = "You need to gather all items"
+            }
+        } else {
+            questStatsMessage.innerHTML = "You need to gather all items"
+        }
+        
+    }
+}
+const setQuestStats = (questScreenSelected) => {
+    questRewardItemsList.innerText = ""
+    let QuestIsActive = false
+    hero.activeQuests.map((quest)=>{
+        if (quest.name == questScreenSelected.name){
+            QuestIsActive = true
+        }
+    })
+    
+    questActionButton.innerHTML = QuestIsActive ? "Complete quest" : "Accept quest";
+    questActionButton.addEventListener("click", ()=>{
+        if(QuestIsActive){
+            
+            completeQuest(questScreenSelected)
+        }
+        else{
+            if(!hero.activeQuests.includes(questScreenSelected)){
+                hero.activeQuests.push(questScreenSelected)
+            } else {
+                completeQuest(questScreenSelected)
+            }
+            
+            questActionButton.innerHTML = "Complete quest"
+        }
+    })
+    if(questScreenSelected.level > hero.level){
+        questActionButton.setAttribute("disabled", "true")
+    } else{
+        questActionButton.removeAttribute("disabled")
+    }
+    questName.innerHTML = questScreenSelected.name
+    questDescription.innerHTML = `Level: ${questScreenSelected.level} - ${questScreenSelected.description}`
+    if(questScreenSelected.goldReward > 0) {
+        goldRewardText.innerHTML = `Gold: ${questScreenSelected.goldReward}`
+    }
+    if(questScreenSelected.xpReward > 0) {
+        xpRewardText.innerHTML = `Experience: ${questScreenSelected.xpReward}`
+    }
+    // questRewardBox
+    questScreenSelected.itemsReward.map((rewardItem)=>{
+        const itemRewardBox = document.createElement("div")
+        itemRewardBox.classList.add("item-reward-box")
+        const itemRewardImg = document.createElement("img")
+        itemRewardImg.classList.add("item-reward-img")
+        itemRewardImg.setAttribute("src", rewardItem.img)
+        const itemRewardName = document.createElement("p")
+        itemRewardName.innerHTML = rewardItem.name
 
+        itemRewardBox.appendChild(itemRewardImg)
+        itemRewardBox.appendChild(itemRewardName)
+
+        questRewardItemsList.appendChild(itemRewardBox)
+    })
+
+}
+const openQuestScreen = (questScreenSelected) => {
+    questScreen.setAttribute("style", "display: flex;")
+    npcScreen.setAttribute("style", "display: none;")
+    setQuestStats(questScreenSelected)
+}
+const setNpcScreen = () => {
+    npcQuestsBox.innerText = ""
+    npcFaceImg.setAttribute("src", npcToTalk.faceImg)
+    npcName.innerHTML = npcToTalk.name
+    npcInitialTalk.innerHTML = npcToTalk.initialText(hero)
+    npcToTalk.questList.map((quest)=>{
+        let isCompleted = false;
+        hero.completedQuests.map((e)=>{
+            if(quest.name == e.name){
+                isCompleted = true
+            }
+        })
+        if(!isCompleted){
+
+            const questListItem = document.createElement("div")
+            questListItem.classList.add("quest-item-list")
+            questListItem.innerHTML = quest.name
+            questListItem.addEventListener("click", ()=>{
+                openQuestScreen(quest)
+            })
+            npcQuestsBox.appendChild(questListItem)
+        }
+    })
+}
+const talkToNpc = () => {
+    onMap = false;
+    npcScreen.setAttribute("style", "display: flex;")
+    questScreen.setAttribute("style", "display: none;")
+    setNpcScreen()
+}
 const takeAction = () => {
     
     if (action == 3) {
@@ -561,6 +731,9 @@ const takeAction = () => {
         action = 0;
         actionButton.setAttribute("style", "background: none; cursor: auto")
         actionButton.innerHTML = ""
+    }
+    if (action == 5) {
+        talkToNpc()
     }
 }
 const checkAction = () => {
@@ -584,6 +757,12 @@ const checkAction = () => {
         actionButton.innerHTML = "Enter";
         actionButton.setAttribute("style", "background: white; cursor: pointer")
         action = 2
+    } else if(mapAction.action == 5) {
+        
+        actionButton.innerHTML = "Talk";
+        actionButton.setAttribute("style", "background: white; cursor: pointer")
+        action = 5
+        npcToTalk = mapAction.npc
     } else {
         action = 0;
         actionButton.setAttribute("style", "background: none; cursor: auto")
@@ -716,6 +895,7 @@ const closePopUp = () => {
     inventorySection.setAttribute("style", "display: none;")
     storeScreen.setAttribute("style", "display: none;")
     transitionScreen.setAttribute("style", "display: none;")
+    battleScreen.setAttribute("style", "display: none;")
 }
 const setPlayerStats = () => {
     skillsBox.innerText = "";
@@ -1015,6 +1195,7 @@ const battleTurn = (actionType) => {
             let monsterDamage = monster.attack()
             hero.takeDamage(monsterDamage)
             battleMessage.innerHTML = `You lost ${Math.max(0, monsterDamage - hero.totalArmor)} hitpoints to a ${monster.name} attack`
+
             for (let i = 0; i < actionList.length; i++) {
                 
                     actionList[i].removeAttribute("disabled")
@@ -1025,8 +1206,17 @@ const battleTurn = (actionType) => {
                 openDefeatedScreen()
                 return
             }
+
             setBattle()
+            setTimeout(()=>{
+
+                if (actionType == "leave") {
+                    closePopUp()
+                    console.log("clicou sair")
+                }
+            }, 800)
         }, 700)
+        
 
         
     } else {
@@ -1046,6 +1236,9 @@ const battleTurn = (actionType) => {
             }
             
         }
+        if(monster.isBoss){
+            map.bossIsKilled = true
+        }
         setTimeout(() => {
 
             openVictoryScreen(monster)
@@ -1054,6 +1247,7 @@ const battleTurn = (actionType) => {
         return
     }
     
+
     
 
     

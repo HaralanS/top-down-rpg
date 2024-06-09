@@ -136,28 +136,28 @@
     gap: 8px;
 }
 .battle-actions-buttons{
-    height: 64px;
-    width: 64px;
+    height: 48px;
+    width: 48px;
     border: 1px solid white;
     border-radius: 4px;
     cursor: pointer;
-    background-size: 64px;
+    background-size: 48px;
 }
 .life-potion-button {
     background-image: url("../img/small-life-potion.png");
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     text-align: left;
     padding: 4px;
-    padding-bottom: 54px;
+    padding-bottom: 4px;
 }
 .mana-potion-button {
     background-image: url("../img/small-mana-potion.png");
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     text-align: left;
     padding: 4px;
-    padding-bottom: 54px;
+    padding-bottom: 4px;
 }
 .hero-hit-animation {
     display: none;
